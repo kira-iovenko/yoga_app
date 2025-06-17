@@ -1,114 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Yoga Timer</title>
-<style>
-  body, html {
-    height: 100%;
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f0f4f8;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  #timer-widget {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    padding: 20px 30px;
-    width: 320px;
-    text-align: center;
-  }
-  h2 {
-    margin: 0 0 15px;
-    color: #333;
-  }
-  label {
-    display: block;
-    margin: 10px 0 5px;
-    font-weight: 600;
-  }
-  input[type="number"] {
-    width: 80px;
-    padding: 6px;
-    font-size: 1em;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    text-align: center;
-  }
-  button {
-    margin: 15px 10px 0 10px;
-    padding: 10px;
-    border: none;
-    background-color: #5c9ded;
-    color: white;
-    font-weight: bold;
-    font-size: 1.2em;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-  }
-  button:hover {
-    background-color: #4a8ad4;
-  }
-  #timer-display {
-    font-size: 2.5em;
-    margin: 20px 0;
-    color: #222;
-  }
-  #progress-container {
-    background: #ddd;
-    width: 100%;
-    height: 20px;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-top: 10px;
-  }
-  #progress-bar {
-    height: 100%;
-    background: #5c9ded;
-    width: 100%;
-    transition: width 1s linear;
-  }
-  /* Icon styles */
-  svg {
-    fill: white;
-    width: 24px;
-    height: 24px;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yoga Timer</title>
+  <style>
+    body,
+    html {
+      height: 100%;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #timer-widget {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      padding: 20px 30px;
+      width: 320px;
+      text-align: center;
+    }
+
+    h2 {
+      margin: 0 0 15px;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: 600;
+    }
+
+    .time-inputs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    input[type="number"] {
+      width: 60px;
+      padding: 6px;
+      font-size: 1em;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+
+    button {
+      margin: 15px 10px 0 10px;
+      padding: 10px;
+      border: none;
+      background-color: #5c9ded;
+      color: white;
+      font-weight: bold;
+      font-size: 1.2em;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+    }
+
+    button:hover {
+      background-color: #4a8ad4;
+    }
+
+    #timer-display {
+      font-size: 2.5em;
+      margin: 20px 0;
+      color: #222;
+    }
+
+    #progress-container {
+      background: #ddd;
+      width: 100%;
+      height: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    #progress-bar {
+      height: 100%;
+      background: #5c9ded;
+      width: 100%;
+      transition: width 1s linear;
+    }
+
+    svg {
+      fill: white;
+      width: 24px;
+      height: 24px;
+    }
+
+    .time-inputs {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .time-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .unit-label {
+      font-size: 0.75em;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    .colon {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
 </head>
+
 <body>
   <div id="timer-widget">
     <h2 id="timer-type">Workout Timer</h2>
-    
-    <label for="workout-time">Workout Time (minutes):</label>
-    <input type="number" id="workout-time" min="1" value="5" />
 
-    <label for="break-time">Break Time (minutes):</label>
-    <input type="number" id="break-time" min="1" value="2" />
-    
+    <label>Workout Time:</label>
+    <div class="time-inputs">
+      <div class="time-group">
+        <input type="number" id="workout-mins" min="0" value="5" />
+        <div class="unit-label">min</div>
+      </div>
+      <div class="colon">:</div>
+      <div class="time-group">
+        <input type="number" id="workout-secs" min="0" max="59" value="0" />
+        <div class="unit-label">sec</div>
+      </div>
+    </div>
+
+    <label>Break Time:</label>
+    <div class="time-inputs">
+      <div class="time-group">
+        <input type="number" id="break-mins" min="0" value="2" />
+        <div class="unit-label">min</div>
+      </div>
+      <div class="colon">:</div>
+      <div class="time-group">
+        <input type="number" id="break-secs" min="0" max="59" value="0" />
+        <div class="unit-label">sec</div>
+      </div>
+    </div>
+
+
     <div id="timer-display">05:00</div>
-    
+
     <div id="progress-container" style="display:none;">
       <div id="progress-bar"></div>
     </div>
 
     <div>
       <button id="start-btn" aria-label="Start timer" title="Start">
-        <!-- Play icon initially -->
         <svg viewBox="0 0 24 24" id="play-icon">
           <polygon points="6,4 20,12 6,20"></polygon>
         </svg>
-        <!-- Pause icon hidden initially -->
         <svg viewBox="0 0 24 24" id="pause-icon" style="display:none;">
           <rect x="6" y="4" width="4" height="16"></rect>
           <rect x="14" y="4" width="4" height="16"></rect>
@@ -116,110 +180,140 @@
       </button>
 
       <button id="switch-btn" aria-label="Switch timer" title="Switch timer">
-        <!-- Shuffle icon -->
         <svg viewBox="0 0 24 24" id="shuffle-icon">
-          <path d="M16 3h5v5l-1.5-1.5L14 11l-4-4-2.5 2.5-2.5-2.5L3 9V4h5l3 3 4-4zM3 19v-5l1.5 1.5L10 13l4 4 2.5-2.5 2.5 2.5L21 15v5h-5l-3-3-4 4-3-3z"/>
+          <path
+            d="M16 3h5v5l-1.5-1.5L14 11l-4-4-2.5 2.5-2.5-2.5L3 9V4h5l3 3 4-4zM3 19v-5l1.5 1.5L10 13l4 4 2.5-2.5 2.5 2.5L21 15v5h-5l-3-3-4 4-3-3z" />
         </svg>
       </button>
     </div>
   </div>
 
-<script>
-  const workoutInput = document.getElementById('workout-time');
-  const breakInput = document.getElementById('break-time');
-  const timerDisplay = document.getElementById('timer-display');
-  const timerTypeEl = document.getElementById('timer-type');
-  const startBtn = document.getElementById('start-btn');
-  const switchBtn = document.getElementById('switch-btn');
-  const progressContainer = document.getElementById('progress-container');
-  const progressBar = document.getElementById('progress-bar');
+  <script>
+    const workoutMins = document.getElementById('workout-mins');
+    const workoutSecs = document.getElementById('workout-secs');
+    const breakMins = document.getElementById('break-mins');
+    const breakSecs = document.getElementById('break-secs');
+    const timerDisplay = document.getElementById('timer-display');
+    const timerTypeEl = document.getElementById('timer-type');
+    const startBtn = document.getElementById('start-btn');
+    const switchBtn = document.getElementById('switch-btn');
+    const progressContainer = document.getElementById('progress-container');
+    const progressBar = document.getElementById('progress-bar');
 
-  const playIcon = document.getElementById('play-icon');
-  const pauseIcon = document.getElementById('pause-icon');
+    const playIcon = document.getElementById('play-icon');
+    const pauseIcon = document.getElementById('pause-icon');
 
-  let isWorkout = true;
-  let workoutSeconds = parseInt(workoutInput.value) * 60;
-  let breakSeconds = parseInt(breakInput.value) * 60;
-  let currentSeconds = workoutSeconds;
-  let timerInterval = null;
-  let isRunning = false;
+    let isWorkout = true;
+    let workoutSeconds = parseInt(workoutMins.value) * 60 + parseInt(workoutSecs.value);
+    let breakSeconds = parseInt(breakMins.value) * 60 + parseInt(breakSecs.value);
+    let currentSeconds = workoutSeconds;
+    let timerInterval = null;
+    let isRunning = false;
 
-  function formatTime(seconds) {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-  }
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
 
-  function updateDisplay() {
-    timerDisplay.textContent = formatTime(currentSeconds);
-    timerTypeEl.textContent = isWorkout ? 'Workout Timer' : 'Break Timer';
-    const total = isWorkout ? workoutSeconds : breakSeconds;
-    const percent = (currentSeconds / total) * 100;
-    progressBar.style.width = percent + '%';
-  }
+    function updateDisplay() {
+      timerDisplay.textContent = formatTime(currentSeconds);
+      timerTypeEl.textContent = isWorkout ? 'Workout Timer' : 'Break Timer';
+      const total = isWorkout ? workoutSeconds : breakSeconds;
+      const percent = (currentSeconds / total) * 100;
+      progressBar.style.width = percent + '%';
+    }
 
-  function resetTimer() {
-    clearInterval(timerInterval);
-    isRunning = false;
-    // Show play icon, hide pause
-    playIcon.style.display = 'block';
-    pauseIcon.style.display = 'none';
-    startBtn.title = 'Start';
-    progressContainer.style.display = 'none';
-    workoutSeconds = parseInt(workoutInput.value) * 60;
-    breakSeconds = parseInt(breakInput.value) * 60;
-    currentSeconds = isWorkout ? workoutSeconds : breakSeconds;
-    updateDisplay();
-  }
-
-  startBtn.addEventListener('click', () => {
-    if (isRunning) {
-      // Pause timer
+    function resetTimer() {
       clearInterval(timerInterval);
       isRunning = false;
-      // Show play icon, hide pause
       playIcon.style.display = 'block';
       pauseIcon.style.display = 'none';
       startBtn.title = 'Start';
-    } else {
-      // Start timer
-      workoutInput.disabled = true;
-      breakInput.disabled = true;
-      progressContainer.style.display = 'block';
-      // Show pause icon, hide play
-      playIcon.style.display = 'none';
-      pauseIcon.style.display = 'block';
-      startBtn.title = 'Pause';
-      isRunning = true;
+      progressContainer.style.display = 'none';
+      workoutSeconds = parseInt(workoutMins.value) * 60 + parseInt(workoutSecs.value);
+      breakSeconds = parseInt(breakMins.value) * 60 + parseInt(breakSecs.value);
+      currentSeconds = isWorkout ? workoutSeconds : breakSeconds;
+      updateDisplay();
+    }
 
-      timerInterval = setInterval(() => {
-        if (currentSeconds > 0) {
-          currentSeconds--;
+    function getUpdatedSeconds(isWorkoutPhase) {
+      if (isWorkoutPhase) {
+        return parseInt(workoutMins.value) * 60 + parseInt(workoutSecs.value);
+      } else {
+        return parseInt(breakMins.value) * 60 + parseInt(breakSecs.value);
+      }
+    }
+
+    [workoutMins, workoutSecs].forEach(el => {
+      el.addEventListener('input', () => {
+        if (!isRunning && isWorkout) {
+          workoutSeconds = getUpdatedSeconds(true);
+          currentSeconds = workoutSeconds;
           updateDisplay();
-        } else {
-          clearInterval(timerInterval);
-          isRunning = false;
-          playIcon.style.display = 'block';
-          pauseIcon.style.display = 'none';
-          startBtn.title = 'Start';
-          alert(`${isWorkout ? 'Workout' : 'Break'} time is up!`);
         }
-      }, 1000);
-    }
-  });
+      });
+    });
 
-  switchBtn.addEventListener('click', () => {
-    if (isRunning) {
-      alert('Pause timer before switching!');
-      return;
-    }
-    isWorkout = !isWorkout;
+    [breakMins, breakSecs].forEach(el => {
+      el.addEventListener('input', () => {
+        if (!isRunning && !isWorkout) {
+          breakSeconds = getUpdatedSeconds(false);
+          currentSeconds = breakSeconds;
+          updateDisplay();
+        }
+      });
+    });
+
+    startBtn.addEventListener('click', () => {
+      if (isRunning) {
+        clearInterval(timerInterval);
+        isRunning = false;
+        playIcon.style.display = 'block';
+        pauseIcon.style.display = 'none';
+        startBtn.title = 'Start';
+      } else {
+        workoutMins.disabled = true;
+        workoutSecs.disabled = true;
+        breakMins.disabled = true;
+        breakSecs.disabled = true;
+        progressContainer.style.display = 'block';
+        playIcon.style.display = 'none';
+        pauseIcon.style.display = 'block';
+        startBtn.title = 'Pause';
+        isRunning = true;
+
+        timerInterval = setInterval(() => {
+          if (currentSeconds > 0) {
+            currentSeconds--;
+            updateDisplay();
+          } else {
+            alert(`${isWorkout ? 'Workout' : 'Break'} time is up!`);
+            isWorkout = !isWorkout;
+            workoutSeconds = getUpdatedSeconds(true);
+            breakSeconds = getUpdatedSeconds(false);
+            currentSeconds = isWorkout ? workoutSeconds : breakSeconds;
+            updateDisplay();
+          }
+        }, 1000);
+      }
+    });
+
+    switchBtn.addEventListener('click', () => {
+      if (isRunning) {
+        alert('Pause timer before switching!');
+        return;
+      }
+      isWorkout = !isWorkout;
+      resetTimer();
+      workoutMins.disabled = false;
+      workoutSecs.disabled = false;
+      breakMins.disabled = false;
+      breakSecs.disabled = false;
+    });
+
     resetTimer();
-    workoutInput.disabled = false;
-    breakInput.disabled = false;
-  });
-
-  resetTimer();
-</script>
+  </script>
 </body>
+
 </html>
