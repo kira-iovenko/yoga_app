@@ -50,7 +50,7 @@ function resetTimer() {
     isRunning = false;
     round = 1;
     isWorkout = true;
-    currentSeconds = getWorkSeconds();  // <-- get fresh values on reset
+    currentSeconds = getWorkSeconds();
 
     playIcon.style.display = 'block';
     pauseIcon.style.display = 'none';
@@ -67,7 +67,7 @@ function resetTimer() {
     updateDisplay();
 }
 
-// **Add these input listeners:**
+// Input listeners
 [workoutMins, workoutSecs].forEach(input => {
     input.addEventListener('input', () => {
         if (!isRunning && isWorkout) {
@@ -86,6 +86,7 @@ function resetTimer() {
     });
 });
 
+// Start/Pause button
 startBtn.addEventListener('click', () => {
     if (isRunning) {
         clearInterval(timerInterval);
@@ -100,7 +101,6 @@ startBtn.addEventListener('click', () => {
         breakSecs.disabled = false;
         switchBtn.disabled = false;
     } else {
-        // Validate inputs
         if (getWorkSeconds() <= 0) {
             alert('Please enter a valid workout time.');
             return;
@@ -160,6 +160,7 @@ startBtn.addEventListener('click', () => {
     }
 });
 
+// Switch button
 switchBtn.addEventListener('click', () => {
     if (isRunning) {
         alert('Pause the timer before switching phases.');
@@ -169,6 +170,21 @@ switchBtn.addEventListener('click', () => {
     round = 1;
     currentSeconds = isWorkout ? getWorkSeconds() : getBreakSeconds();
     updateDisplay();
+});
+
+// Tab Switching Setup — runs once when page loads
+const tabButtons = document.querySelectorAll('.tab-btn');
+const tabContents = document.querySelectorAll('.tab-content');
+
+tabButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabContents.forEach(content => content.style.display = 'none');
+
+        button.classList.add('active');
+        const target = document.getElementById(button.dataset.tab);
+        if (target) target.style.display = 'block';
+    });
 });
 
 resetTimer();

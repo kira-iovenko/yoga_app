@@ -7,11 +7,64 @@ html {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+    /* So tabs and timer stack vertically */
+    padding: 20px;
+    /* a bit of padding so tabs are not too close to edges */
+}
+
+/* Tabs container */
+#tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    width: 320px;
+    /* same width as timer widget */
+}
+
+/* Each tab button */
+.tab-btn {
+    flex: 1;
+    /* evenly sized */
+    padding: 10px 0;
+    background-color: #e2e8f0;
+    border: none;
+    border-radius: 8px 8px 0 0;
+    font-weight: bold;
+    color: #555;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    user-select: none;
+}
+
+/* Active tab */
+.tab-btn.active {
+    background-color: white;
+    color: #5c9ded;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Tab content wrapper */
+#tab-contents {
+    width: 320px;
+    /* same width as timer widget */
+}
+
+/* Hide inactive tabs */
+.tab-content {
+    display: none;
+}
+
+/* Show active tab content */
+.tab-content[style*="display: block"] {
+    display: block;
 }
 
 #timer-widget {
     background: white;
-    border-radius: 10px;
+    border-radius: 0 0 10px 10px;
+    /* rounded only bottom corners to match tabs */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     padding: 20px 30px;
     width: 320px;
@@ -112,4 +165,23 @@ svg {
     fill: white;
     width: 24px;
     height: 24px;
+}
+
+.widget {
+    background: #fff;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.yoga-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.yoga-list li {
+    margin-bottom: 16px;
+    line-height: 1.6;
 }

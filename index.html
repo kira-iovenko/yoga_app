@@ -9,58 +9,92 @@
 </head>
 
 <body>
-  <div id="timer-widget">
-    <h2 id="timer-type">Workout Timer</h2>
+  <div id="tab-header">
+    <button class="tab-btn active" data-tab="timer-tab">Timer</button>
+    <button class="tab-btn" data-tab="plan">Plan</button>
+  </div>
 
-    <label>Workout Time:</label>
-    <div class="time-inputs">
-      <div class="time-group">
-        <input type="number" id="workout-mins" min="0" value="5" />
-        <div class="unit-label">min</div>
-      </div>
-      <div class="colon">:</div>
-      <div class="time-group">
-        <input type="number" id="workout-secs" min="0" max="59" value="0" />
-        <div class="unit-label">sec</div>
+  <div id="tab-content">
+    <div id="timer-tab" class="tab-content" style="display: block;">
+      <div id="timer-widget">
+        <h2 id="timer-type">Workout Timer</h2>
+
+        <label>Workout Time:</label>
+        <div class="time-inputs">
+          <div class="time-group">
+            <input type="number" id="workout-mins" min="0" value="5" />
+            <div class="unit-label">min</div>
+          </div>
+          <div class="colon">:</div>
+          <div class="time-group">
+            <input type="number" id="workout-secs" min="0" max="59" value="0" />
+            <div class="unit-label">sec</div>
+          </div>
+        </div>
+
+        <label>Break Time:</label>
+        <div class="time-inputs">
+          <div class="time-group">
+            <input type="number" id="break-mins" min="0" value="2" />
+            <div class="unit-label">min</div>
+          </div>
+          <div class="colon">:</div>
+          <div class="time-group">
+            <input type="number" id="break-secs" min="0" max="59" value="0" />
+            <div class="unit-label">sec</div>
+          </div>
+        </div>
+
+        <div id="timer-display">05:00</div>
+
+        <div id="progress-container" style="display:none;">
+          <div id="progress-bar"></div>
+        </div>
+
+        <div>
+          <button id="start-btn" aria-label="Start timer" title="Start">
+            <svg viewBox="0 0 24 24" id="play-icon">
+              <polygon points="6,4 20,12 6,20"></polygon>
+            </svg>
+            <svg viewBox="0 0 24 24" id="pause-icon" style="display:none;">
+              <rect x="6" y="4" width="4" height="16"></rect>
+              <rect x="14" y="4" width="4" height="16"></rect>
+            </svg>
+          </button>
+
+          <button id="switch-btn" aria-label="Switch timer" title="Switch timer">
+            <svg viewBox="0 0 24 24" id="shuffle-icon">
+              <path
+                d="M16 3h5v5l-1.5-1.5L14 11l-4-4-2.5 2.5-2.5-2.5L3 9V4h5l3 3 4-4zM3 19v-5l1.5 1.5L10 13l4 4 2.5-2.5 2.5 2.5L21 15v5h-5l-3-3-4 4-3-3z" />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
 
-    <label>Break Time:</label>
-    <div class="time-inputs">
-      <div class="time-group">
-        <input type="number" id="break-mins" min="0" value="2" />
-        <div class="unit-label">min</div>
+    <div id="plan" class="tab-content" style="display: none;">
+      <div class="widget">
+        <h2>Yoga Plan</h2>
+        <ul class="yoga-list">
+          <li>
+            <strong>Mountain Pose</strong> – Stand tall, grounding your feet. Improves posture and balance.
+          </li>
+          <li>
+            <strong>Downward Dog</strong> – Hands and feet on the floor, hips raised. Stretches spine and hamstrings.
+          </li>
+          <li>
+            <strong>Child’s Pose</strong> – Kneel and rest your torso forward. Calms the body and mind.
+          </li>
+          <li>
+            <strong>Cobra Pose</strong> – Lie on your stomach, lift chest with arms. Opens the chest and strengthens the
+            spine.
+          </li>
+          <li>
+            <strong>Tree Pose</strong> – Balance on one leg with the other foot on your thigh. Builds focus and
+            stability.
+          </li>
+        </ul>
       </div>
-      <div class="colon">:</div>
-      <div class="time-group">
-        <input type="number" id="break-secs" min="0" max="59" value="0" />
-        <div class="unit-label">sec</div>
-      </div>
-    </div>
-
-    <div id="timer-display">05:00</div>
-
-    <div id="progress-container" style="display:none;">
-      <div id="progress-bar"></div>
-    </div>
-
-    <div>
-      <button id="start-btn" aria-label="Start timer" title="Start">
-        <svg viewBox="0 0 24 24" id="play-icon">
-          <polygon points="6,4 20,12 6,20"></polygon>
-        </svg>
-        <svg viewBox="0 0 24 24" id="pause-icon" style="display:none;">
-          <rect x="6" y="4" width="4" height="16"></rect>
-          <rect x="14" y="4" width="4" height="16"></rect>
-        </svg>
-      </button>
-
-      <button id="switch-btn" aria-label="Switch timer" title="Switch timer">
-        <svg viewBox="0 0 24 24" id="shuffle-icon">
-          <path
-            d="M16 3h5v5l-1.5-1.5L14 11l-4-4-2.5 2.5-2.5-2.5L3 9V4h5l3 3 4-4zM3 19v-5l1.5 1.5L10 13l4 4 2.5-2.5 2.5 2.5L21 15v5h-5l-3-3-4 4-3-3z" />
-        </svg>
-      </button>
     </div>
   </div>
 
