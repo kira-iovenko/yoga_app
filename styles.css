@@ -1,0 +1,115 @@
+body,
+html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f0f4f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#timer-widget {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 20px 30px;
+    width: 320px;
+    text-align: center;
+}
+
+h2 {
+    margin: 0 0 15px;
+    color: #333;
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: 600;
+}
+
+.time-inputs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.time-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.unit-label {
+    font-size: 0.75em;
+    color: #666;
+    margin-top: 4px;
+}
+
+.colon {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+}
+
+input[type="number"] {
+    width: 60px;
+    padding: 6px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+button {
+    margin: 15px 10px 0 10px;
+    padding: 10px;
+    border: none;
+    background-color: #5c9ded;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+}
+
+button:hover {
+    background-color: #4a8ad4;
+}
+
+#timer-display {
+    font-size: 2.5em;
+    margin: 20px 0;
+    color: #222;
+}
+
+#progress-container {
+    background: #ddd;
+    width: 100%;
+    height: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+#progress-bar {
+    height: 100%;
+    background: #5c9ded;
+    width: 100%;
+    transition: width 1s linear;
+}
+
+svg {
+    fill: white;
+    width: 24px;
+    height: 24px;
+}
