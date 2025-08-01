@@ -1,3 +1,4 @@
+const totalRoundsInput = document.getElementById('total-rounds');
 const workoutMins = document.getElementById('workout-mins');
 const workoutSecs = document.getElementById('workout-secs');
 const breakMins = document.getElementById('break-mins');
@@ -12,8 +13,6 @@ const progressBar = document.getElementById('progress-bar');
 
 const playIcon = document.getElementById('play-icon');
 const pauseIcon = document.getElementById('pause-icon');
-
-const TOTAL_ROUNDS = 8;
 
 let isWorkout = true;
 let currentSeconds = 0;
@@ -38,8 +37,8 @@ function formatTime(seconds) {
 function updateDisplay() {
     timerDisplay.textContent = formatTime(currentSeconds);
     timerTypeEl.textContent = isWorkout
-        ? `Work - Round ${round} of ${TOTAL_ROUNDS}`
-        : `Rest - Round ${round} of ${TOTAL_ROUNDS}`;
+        ? `Work - Round ${round} of ${parseInt(totalRoundsInput.value)}`
+        : `Rest - Round ${round} of ${parseInt(totalRoundsInput.value)}`;
     const total = isWorkout ? getWorkSeconds() : getBreakSeconds();
     const percent = (currentSeconds / total) * 100;
     progressBar.style.width = percent + '%';
@@ -63,6 +62,7 @@ function resetTimer() {
     breakMins.disabled = false;
     breakSecs.disabled = false;
     switchBtn.disabled = false;
+    totalRoundsInput.disabled = false;
 
     updateDisplay();
 }
@@ -100,6 +100,7 @@ startBtn.addEventListener('click', () => {
         breakMins.disabled = false;
         breakSecs.disabled = false;
         switchBtn.disabled = false;
+        totalRoundsInput.disabled = false;
     } else {
         if (getWorkSeconds() <= 0) {
             alert('Please enter a valid workout time.');
@@ -116,6 +117,7 @@ startBtn.addEventListener('click', () => {
         breakMins.disabled = true;
         breakSecs.disabled = true;
         switchBtn.disabled = true;
+        totalRoundsInput.disabled = true;
 
         playIcon.style.display = 'none';
         pauseIcon.style.display = 'block';
@@ -136,7 +138,7 @@ startBtn.addEventListener('click', () => {
             } else {
                 if (!isWorkout) {
                     round++;
-                    if (round > TOTAL_ROUNDS) {
+                    if (round > parseInt(totalRoundsInput.value)) {
                         alert('Tabata complete! Great job!');
                         clearInterval(timerInterval);
                         isRunning = false;
@@ -149,6 +151,7 @@ startBtn.addEventListener('click', () => {
                         breakMins.disabled = false;
                         breakSecs.disabled = false;
                         switchBtn.disabled = false;
+                        totalRoundsInput.disabled = false;
                         return;
                     }
                 }

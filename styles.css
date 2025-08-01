@@ -1,187 +1,191 @@
 body,
 html {
-    height: 100%;
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f0f4f8;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    /* So tabs and timer stack vertically */
-    padding: 20px;
-    /* a bit of padding so tabs are not too close to edges */
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f0f4f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* So tabs and timer stack vertically */
+  padding: 20px;
+  /* a bit of padding so tabs are not too close to edges */
 }
 
 /* Tabs container */
 #tabs {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    width: 320px;
-    /* same width as timer widget */
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  width: 320px;
+  /* same width as timer widget */
 }
 
 /* Each tab button */
 .tab-btn {
-    flex: 1;
-    /* evenly sized */
-    padding: 10px 0;
-    background-color: #e2e8f0;
-    border: none;
-    border-radius: 8px 8px 0 0;
-    font-weight: bold;
-    color: #555;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    user-select: none;
+  flex: 1;
+  /* evenly sized */
+  padding: 10px 0;
+  background-color: #e2e8f0;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  font-weight: bold;
+  color: #555;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  user-select: none;
 }
 
 /* Active tab */
 .tab-btn.active {
-    background-color: white;
-    color: #5c9ded;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  color: #5c9ded;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 /* Tab content wrapper */
 #tab-contents {
-    width: 320px;
-    /* same width as timer widget */
+  width: 320px;
+  /* same width as timer widget */
 }
 
 /* Hide inactive tabs */
 .tab-content {
-    display: none;
+  display: none;
 }
 
 /* Show active tab content */
 .tab-content[style*="display: block"] {
-    display: block;
+  display: block;
 }
 
 #timer-widget {
-    background: white;
-    border-radius: 0 0 10px 10px;
-    /* rounded only bottom corners to match tabs */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    padding: 20px 30px;
-    width: 320px;
-    text-align: center;
+  background: white;
+  border-radius: 0 0 10px 10px;
+  /* rounded only bottom corners to match tabs */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 20px 30px;
+  width: 320px;
+  text-align: center;
 }
 
 h2 {
-    margin: 0 0 15px;
-    color: #333;
+  margin: 0 0 15px;
+  color: #333;
 }
 
 label {
-    display: block;
-    margin: 10px 0 5px;
-    font-weight: 600;
+  display: block;
+  margin: 10px 0 5px;
+  font-weight: 600;
 }
 
 .time-inputs {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
 .time-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .unit-label {
-    font-size: 0.75em;
-    color: #666;
-    margin-top: 4px;
+  font-size: 0.75em;
+  color: #666;
+  margin-top: 4px;
 }
 
 .colon {
-    font-size: 1.5em;
-    font-weight: bold;
-    color: #333;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #333;
 }
 
 input[type="number"] {
-    width: 60px;
-    padding: 6px;
-    font-size: 1em;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    text-align: center;
+  width: 60px;
+  padding: 6px;
+  font-size: 1em;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  text-align: center;
 }
 
 button {
-    margin: 15px 10px 0 10px;
-    padding: 10px;
-    border: none;
-    background-color: #5c9ded;
-    color: white;
-    font-weight: bold;
-    font-size: 1.2em;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
+  margin: 15px 10px 0 10px;
+  padding: 10px;
+  border: none;
+  background-color: #5c9ded;
+  color: white;
+  font-weight: bold;
+  font-size: 1.2em;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
 }
 
 button:hover {
-    background-color: #4a8ad4;
+  background-color: #4a8ad4;
 }
 
 #timer-display {
-    font-size: 2.5em;
-    margin: 20px 0;
-    color: #222;
+  font-size: 2.5em;
+  margin: 20px 0;
+  color: #222;
+}
+
+#timer-widget label {
+  margin-top: 12px;
 }
 
 #progress-container {
-    background: #ddd;
-    width: 100%;
-    height: 20px;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-top: 10px;
+  background: #ddd;
+  width: 100%;
+  height: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 10px;
 }
 
 #progress-bar {
-    height: 100%;
-    background: #5c9ded;
-    width: 100%;
-    transition: width 1s linear;
+  height: 100%;
+  background: #5c9ded;
+  width: 100%;
+  transition: width 1s linear;
 }
 
 svg {
-    fill: white;
-    width: 24px;
-    height: 24px;
+  fill: white;
+  width: 24px;
+  height: 24px;
 }
 
 .widget {
-    background: #fff;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    max-width: 500px;
-    margin: 0 auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 0 auto;
 }
 
 .yoga-list {
-    list-style-type: none;
-    padding: 0;
+  list-style-type: none;
+  padding: 0;
 }
 
 .yoga-list li {
-    margin-bottom: 16px;
-    line-height: 1.6;
+  margin-bottom: 16px;
+  line-height: 1.6;
 }
