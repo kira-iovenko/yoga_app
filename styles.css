@@ -205,6 +205,24 @@ button:hover {
   justify-content: center;
 }
 
+.setting-label {
+  text-transform: uppercase;
+  font-weight: bold;
+  margin-bottom: 4px;
+  font-size: 0.9em;
+}
+
+.setting-label.sets {
+  color: #666; /* grey */
+}
+
+.setting-label.work {
+  color: #2e7d32; /* green */
+}
+
+.setting-label.rest {
+  color: #5c9ded; /* blue */
+}
 
 #timer-display {
   font-size: 2.5em;

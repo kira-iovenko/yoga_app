@@ -69,45 +69,53 @@ function resetTimer() {
 }
 
 // Validate time inputs to ensure they are within 00-59 range
-function validateTimeInputs(minInput, secInput) {
-  let mins = Math.max(0, Math.min(59, parseInt(minInput.value) || 0));
-  let secs = Math.max(0, Math.min(59, parseInt(secInput.value) || 0));
-  minInput.value = mins.toString().padStart(2, '0');
-  secInput.value = secs.toString().padStart(2, '0');
-  if (!isRunning) {
-    currentSeconds = isWorkout ? getWorkSeconds() : getBreakSeconds();
-    updateDisplay();
-  }
+function validateTimeInputs(input) {
+  input.addEventListener("input", () => {
+    let num = Math.min(parseInt(input.value) || 0, 59);
+    input.value = num.toString().padStart(2, "0");
+    if (!isRunning) {
+      currentSeconds = isWorkout ? getWorkSeconds() : getBreakSeconds();
+      updateDisplay();
+    }
+  });
 }
 
 // Input listeners
-[workoutMins, workoutSecs].forEach(input =>
-  input.addEventListener('blur', () => validateTimeInputs(workoutMins, workoutSecs))
-);
-[breakMins, breakSecs].forEach(input =>
-  input.addEventListener('blur', () => validateTimeInputs(breakMins, breakSecs))
-);
+[workoutMins, workoutSecs, breakMins, breakSecs].forEach(validateTimeInputs);
 
-setsInput.addEventListener('blur', () => {
-  let value = parseInt(setsInput.value);
-  setsInput.value = Math.max(1, isNaN(value) ? 1 : value);
+setsInput.addEventListener("input", () => {
+  let value = parseInt(setsInput.value) || 1;
+  setsInput.value = Math.max(1, Math.min(99, value));
 });
 
-document.querySelectorAll('.adjust-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const step = parseInt(btn.dataset.step);
+document.querySelectorAll(".adjust-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const step = parseInt(btn.dataset.step, 10);
     const target = btn.dataset.target;
-    if (target === 'sets') {
+
+    if (target === "sets") {
       let val = parseInt(setsInput.value) || 1;
-      setsInput.value = Math.max(1, val + step);
+      setsInput.value = Math.max(1, Math.min(99, val + step));
     } else {
       const minInput = document.getElementById(`${target}-mins`);
       const secInput = document.getElementById(`${target}-secs`);
+
       let total = parseInt(minInput.value) * 60 + parseInt(secInput.value);
-      total = Math.max(0, Math.min(3599, total + step));
-      minInput.value = Math.floor(total / 60).toString().padStart(2, '0');
-      secInput.value = (total % 60).toString().padStart(2, '0');
+
+      // Snap to nearest 5s boundary before applying step
+      if (total % 5 !== 0) {
+        const mod = total % 5;
+        total += step > 0 ? (5 - mod) : -mod;
+      } else {
+        total += step;
+      }
+
+      total = Math.max(0, Math.min(3599, total)); // clamp to 59:59
+
+      minInput.value = Math.floor(total / 60).toString().padStart(2, "0");
+      secInput.value = (total % 60).toString().padStart(2, "0");
     }
+
     if (!isRunning) {
       currentSeconds = isWorkout ? getWorkSeconds() : getBreakSeconds();
       updateDisplay();
@@ -115,14 +123,15 @@ document.querySelectorAll('.adjust-btn').forEach(btn => {
   });
 });
 
+
 // Start/Pause button
-startBtn.addEventListener('click', () => {
+startBtn.addEventListener("click", () => {
   if (isRunning) {
     clearInterval(timerInterval);
     isRunning = false;
-    playIcon.style.display = 'block';
-    pauseIcon.style.display = 'none';
-    startBtn.title = 'Start';
+    playIcon.style.display = "block";
+    pauseIcon.style.display = "none";
+    startBtn.title = "Start";
 
     workoutMins.disabled = false;
     workoutSecs.disabled = false;
@@ -132,11 +141,11 @@ startBtn.addEventListener('click', () => {
     setsInput.disabled = false;
   } else {
     if (getWorkSeconds() <= 0) {
-      alert('Please enter a valid workout time.');
+      alert("Please enter a valid workout time.");
       return;
     }
     if (getBreakSeconds() < 0) {
-      alert('Please enter a valid break time (0 or more seconds).');
+      alert("Please enter a valid break time (0 or more seconds).");
       return;
     }
 
@@ -148,9 +157,9 @@ startBtn.addEventListener('click', () => {
     switchBtn.disabled = true;
     setsInput.disabled = true;
 
-    playIcon.style.display = 'none';
-    pauseIcon.style.display = 'block';
-    startBtn.title = 'Pause';
+    playIcon.style.display = "none";
+    pauseIcon.style.display = "block";
+    startBtn.title = "Pause";
 
     if (currentSeconds === 0) {
       currentSeconds = getWorkSeconds();
@@ -168,7 +177,7 @@ startBtn.addEventListener('click', () => {
         if (!isWorkout) {
           round++;
           if (round > parseInt(setsInput.value)) {
-            alert('Workout complete! Great job!');
+            alert("Workout complete! Great job!");
             clearInterval(timerInterval);
             isRunning = false;
             resetTimer();
@@ -184,9 +193,9 @@ startBtn.addEventListener('click', () => {
 });
 
 // Switch button
-switchBtn.addEventListener('click', () => {
+switchBtn.addEventListener("click", () => {
   if (isRunning) {
-    alert('Pause the timer before switching phases.');
+    alert("Pause the timer before switching phases.");
     return;
   }
   isWorkout = !isWorkout;
@@ -198,15 +207,15 @@ switchBtn.addEventListener('click', () => {
 resetTimer();
 
 // Tab Switching Setup — runs once when page loads
-const tabButtons = document.querySelectorAll('.tab-btn');
-const tabContents = document.querySelectorAll('.tab-content');
+const tabButtons = document.querySelectorAll(".tab-btn");
+const tabContents = document.querySelectorAll(".tab-content");
 
-tabButtons.forEach(button => {
-  button.addEventListener('click', () => {
-    tabButtons.forEach(btn => btn.classList.remove('active'));
-    tabContents.forEach(content => content.style.display = 'none');
-    button.classList.add('active');
+tabButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    tabButtons.forEach((btn) => btn.classList.remove("active"));
+    tabContents.forEach((content) => (content.style.display = "none"));
+    button.classList.add("active");
     const target = document.getElementById(button.dataset.tab);
-    if (target) target.style.display = 'block';
+    if (target) target.style.display = "block";
   });
 });
