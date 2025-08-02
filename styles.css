@@ -1,48 +1,411 @@
-body,
+/*
+1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
+2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
+*/
+*,
+::before,
+::after {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: #e5e7eb;
+}
+
+/*
+1. Use a consistent sensible line-height in all browsers.
+2. Prevent adjustments of font size after orientation changes in iOS.
+3. Use a more readable tab size.
+4. Use the user's configured `sans` font-family by default.
+*/
 html {
-  height: 100%;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+/*
+1. Remove the margin in all browsers.
+2. Inherit line-height from `html` so users can set them as a class directly on the `html` element.
+*/
+body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f0f4f8;
+  line-height: inherit;
+}
+
+/*
+1. Add the correct height in Firefox.
+2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)
+3. Ensure horizontal rules are visible by default.
+*/
+hr {
+  height: 0;
+  color: inherit;
+  border-top-width: 1px;
+}
+
+/*
+Add the correct text decoration in Chrome, Edge, and Safari.
+*/
+abbr:where([title]) {
+  -webkit-text-decoration: underline dotted;
+  text-decoration: underline dotted;
+}
+
+/*
+Remove the default font size and weight for headings.
+*/
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+/*
+Reset links to optimize for opt-in styling instead of opt-out.
+*/
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+/*
+Add the correct font weight in Edge and Safari.
+*/
+b,
+strong {
+  font-weight: bolder;
+}
+
+/*
+1. Use the user's configured `mono` font family by default.
+2. Correct the odd `em` font sizing in all browsers.
+*/
+code,
+kbd,
+samp,
+pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; /* 1 */
+  font-size: 1em;
+}
+
+/*
+Add the correct font size in all browsers.
+*/
+small {
+  font-size: 80%;
+}
+
+/*
+Prevent `sub` and `sup` elements from affecting the line height in all browsers.
+*/
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+sup {
+  top: -0.5em;
+}
+
+/*
+1. Remove text indentation from table contents in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=999088, https://bugs.webkit.org/show_bug.cgi?id=201297)
+2. Correct table border color inheritance in all Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=935729, https://bugs.webkit.org/show_bug.cgi?id=195016)
+3. Remove gaps between table borders by default.
+*/
+table {
+  text-indent: 0;
+  border-color: inherit;
+  border-collapse: collapse;
+}
+
+/*
+1. Change the font styles in all browsers.
+2. Remove the margin in Firefox and Safari.
+3. Remove default padding in all browsers.
+*/
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: inherit;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+Remove the inheritance of text transform in Edge and Firefox.
+*/
+button,
+select {
+  text-transform: none;
+}
+
+/*
+1. Correct the inability to style clickable types in iOS and Safari.
+2. Remove default button styles.
+*/
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+  appearance: button;
+  -webkit-appearance: button;
+  background-color: transparent;
+  background-image: none;
+}
+
+/*
+Use the modern Firefox focus style for all focusable elements.
+*/
+:-moz-focusring {
+  outline: auto;
+}
+
+/*
+Remove the additional `:invalid` styles in Firefox. (https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d494c9be1/layout/style/res/forms.css#L728-L737)
+*/
+:-moz-ui-invalid {
+  box-shadow: none;
+}
+
+/*
+Add the correct vertical alignment in Chrome and Firefox.
+*/
+progress {
+  vertical-align: baseline;
+}
+
+/*
+Correct the cursor style of increment and decrement buttons in Safari.
+*/
+::-webkit-inner-spin-button,
+::-webkit-outer-spin-button {
+  height: auto;
+}
+
+/*
+1. Correct the odd appearance in Chrome and Safari.
+2. Correct the outline style in Safari.
+*/
+[type="search"] {
+  appearance: textfield;
+  -webkit-appearance: textfield;
+  outline-offset: -2px;
+}
+
+/*
+Remove the inner padding in Chrome and Safari on macOS.
+*/
+::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+/*
+1. Correct the inability to style clickable types in iOS and Safari.
+2. Change font properties to `inherit` in Safari.
+*/
+::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  font: inherit;
+}
+
+/*
+Add the correct display in Chrome and Safari.
+*/
+summary {
+  display: list-item;
+}
+
+/*
+Removes the default spacing and border for appropriate elements.
+*/
+blockquote,
+dl,
+dd,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+figure,
+p,
+pre {
+  margin: 0;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+legend {
+  padding: 0;
+}
+
+ol,
+ul,
+menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+Prevent resizing textareas horizontally by default.
+*/
+textarea {
+  resize: vertical;
+}
+
+/*
+1. Reset the default placeholder opacity in Firefox. (https://github.com/tailwindlabs/tailwindcss/issues/3300)
+2. Set the default placeholder color to the user's configured gray 400 color.
+*/
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+  opacity: 1;
+  color: #9ca3af;
+}
+
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+  opacity: 1;
+  color: #9ca3af;
+}
+
+input::placeholder,
+textarea::placeholder {
+  opacity: 1;
+  color: #9ca3af;
+}
+
+/*
+Set the default cursor for buttons.
+*/
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
+/*
+Make sure disabled buttons don't get the pointer cursor.
+*/
+:disabled {
+  cursor: default;
+}
+
+/*
+Make replaced elements `display: block` by default. (https://github.com/mozdevs/cssremedy/issues/14)
+*/
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+  display: block;
+}
+
+/*
+Constrain images and videos to the parent width and preserve their intrinsic aspect ratio. (https://github.com/mozdevs/cssremedy/issues/14)
+*/
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+/*
+Ensure the default browser behavior of the `hidden` attribute.
+*/
+[hidden] {
+  display: none;
+}
+
+svg {
+  fill: white;
+  width: 24px;
+  height: 24px;
+}
+
+/* 
+General styles for the widget
+*/
+#widget {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  border: 1px solid rgb(204, 204, 204);
+  background: rgb(255, 255, 255);
+  overflow: hidden;
+  border-radius: 32px;
+  outline: none;
+  padding: 0px;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+
+#widget-container {
+  width: 430px;
+  min-height: 640px;
+  max-height: 640px;
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
-  /* So tabs and timer stack vertically */
-  padding: 20px;
-  /* a bit of padding so tabs are not too close to edges */
+  padding: 32px;
+  gap: 28px;
+  background: white;
+  font-family: sans-serif;
 }
 
 /* Tabs container */
-#tabs {
+#tab-header {
+  width: 100%;
   display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
-  width: 320px;
-  /* same width as timer widget */
+  flex-direction: row;
+  padding: 8px;
+  gap: 8px;
+  background-color: #f0f1f2;
+  border-radius: 8px;
 }
 
 /* Each tab button */
 .tab-btn {
-  flex: 1;
-  /* evenly sized */
-  padding: 10px 0;
-  background-color: #e2e8f0;
-  border: none;
-  border-radius: 8px 8px 0 0;
-  font-weight: bold;
-  color: #555;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  user-select: none;
+  box-shadow: 0 0 #0000, 0 0 #0000, 0 0 #0000;
+  color: #848791;
+  font-weight: 500;
+  font-size: 14px;
+  padding: 4px 12px;
+  background-color: #F0F1F2;
+  border-radius: 8px;
+  width: 100%;
 }
 
 /* Active tab */
 .tab-btn.active {
+  box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  color: #333;
   background-color: white;
-  color: #5c9ded;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 /* Tab content wrapper */
@@ -62,12 +425,12 @@ html {
 }
 
 #timer-widget {
-  background: white;
-  border-radius: 0 0 10px 10px;
+  /* background: white; */
+  /* border-radius: 0 0 10px 10px; */
   /* rounded only bottom corners to match tabs */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  padding: 20px 30px;
-  width: 320px;
+  /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); */
+  /* padding: 20px 30px; */
+  width: 100%;
   text-align: center;
 }
 
@@ -100,43 +463,6 @@ label {
   font-size: 0.75em;
   color: #666;
   margin-top: 4px;
-}
-
-/* .colon {
-  font-size: 1.5em;
-  font-weight: bold;
-  color: #333;
-} */
-
-/* input[type="number"] {
-  width: 60px;
-  padding: 6px;
-  font-size: 1em;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  text-align: center;
-} */
-
-button {
-  /* margin: 15px 10px 0 10px; */
-  padding: 10px;
-  border: none;
-  background-color: #5c9ded;
-  color: white;
-  font-weight: bold;
-  font-size: 1.2em;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-}
-
-button:hover {
-  background-color: #4a8ad4;
 }
 
 .setting-row {
@@ -175,31 +501,38 @@ button:hover {
 }
 
 .adjust-btn {
-  background: none;
-  border: none;
-  font-size: 1.8em;
   width: 40px;
   height: 40px;
-  line-height: 1;
-  border-radius: 8px;
+  font-size: 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 100%;
+  background-color: #F1F1F1;
+  color: black;
+  border-color: rgb(0 0 0 / 0.05);
+  text-align: center;
   cursor: pointer;
-  color: #333;
-  transition: background 0.2s;
 }
 
 .adjust-btn:hover {
-  background: #e2e8f0;
+  background: #EBEAEA;
+}
+
+.adjust-btn:disabled {
+  background: #fafaf9;
+  cursor: not-allowed;
 }
 
 .setting-row {
   display: flex;
-  align-items: top;
+  align-items: center;
   justify-content: space-between;
   margin-bottom: 15px;
+  margin-left: 64px;
+  margin-right: 64px;
 }
 
 .setting-row > .adjust-btn {
-  align-self: stretch;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -248,12 +581,6 @@ button:hover {
   background: #5c9ded;
   width: 100%;
   transition: width 1s linear;
-}
-
-svg {
-  fill: white;
-  width: 24px;
-  height: 24px;
 }
 
 .widget {
