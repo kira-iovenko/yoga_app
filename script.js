@@ -5,6 +5,7 @@ const breakMins = document.getElementById("rest-mins");
 const breakSecs = document.getElementById("rest-secs");
 
 const timerDisplay = document.getElementById("timer-display");
+const timerWidgetTime = document.getElementById("timer-widget-time");
 const timerTypeEl = document.getElementById("timer-type");
 const startBtn = document.getElementById("start-btn");
 const switchBtn = document.getElementById("switch-btn");
@@ -29,16 +30,22 @@ function getBreakSeconds() {
 }
 
 function formatTime(seconds) {
-  const m = Math.floor(seconds / 60);
+  const pad = (num) => num.toString().padStart(2, "0");
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
   const s = seconds % 60;
-  return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+  return h > 0 ? `${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
 }
 
 function updateDisplay() {
   timerDisplay.textContent = formatTime(currentSeconds);
-  timerTypeEl.textContent = isWorkout
-    ? `Work - Round ${round} of ${parseInt(setsInput.value)}`
-    : `Rest - Round ${round} of ${parseInt(setsInput.value)}`;
+
+  const sets = parseInt(setsInput.value) || 1;
+  const totalWorkoutSeconds = sets * (getWorkSeconds() + getBreakSeconds());
+  timerWidgetTime.textContent = formatTime(totalWorkoutSeconds);
+
+  timerTypeEl.textContent = isWorkout ? `Work - Round ${round} of ${sets}` : `Rest - Round ${round} of ${sets}`;
+
   const total = isWorkout ? getWorkSeconds() : getBreakSeconds();
   const percent = (currentSeconds / total) * 100;
   progressBar.style.width = percent + "%";
@@ -105,14 +112,16 @@ document.querySelectorAll(".adjust-btn").forEach((btn) => {
       // Snap to nearest 5s boundary before applying step
       if (total % 5 !== 0) {
         const mod = total % 5;
-        total += step > 0 ? (5 - mod) : -mod;
+        total += step > 0 ? 5 - mod : -mod;
       } else {
         total += step;
       }
 
       total = Math.max(0, Math.min(3599, total)); // clamp to 59:59
 
-      minInput.value = Math.floor(total / 60).toString().padStart(2, "0");
+      minInput.value = Math.floor(total / 60)
+        .toString()
+        .padStart(2, "0");
       secInput.value = (total % 60).toString().padStart(2, "0");
     }
 
@@ -122,7 +131,6 @@ document.querySelectorAll(".adjust-btn").forEach((btn) => {
     }
   });
 });
-
 
 // Start/Pause button
 startBtn.addEventListener("click", () => {

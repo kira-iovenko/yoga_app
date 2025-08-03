@@ -16,9 +16,8 @@
 
         <div id="tab-content">
           <div id="timer-tab" class="tab-content" style="display: block">
-            <div id="timer-widget">
-              <h2 id="timer-type">Workout Timer</h2>
 
+            <div id="timer-container">
               <label class="setting-label sets">Sets</label>
               <div class="setting-row">
                 <button class="adjust-btn" data-target="sets" data-step="-1">−</button>
@@ -47,13 +46,30 @@
                 </div>
                 <button class="adjust-btn" data-target="rest" data-step="5">+</button>
               </div>
+            </div>
 
+            <div id="timer-widget">
+              <div id="timer-widget-title">
+                <button id="start-btn" aria-label="Start timer" title="Start">
+                  <svg viewBox="0 0 24 24" id="play-icon">
+                    <polygon points="6,4 20,12 6,20"></polygon>
+                  </svg>
+                  <svg viewBox="0 0 24 24" id="pause-icon" style="display: none">
+                    <rect x="6" y="4" width="4" height="16"></rect>
+                    <rect x="14" y="4" width="4" height="16"></rect>
+                  </svg>
+                </button>
+                <p>Start timer</p>
+              </div>
+              <span id="timer-widget-time"></span>
+            </div>
+
+            <div id="timer-popup" style="display: none;">
+              <h2 id="timer-type">Workout Timer</h2>
               <div id="timer-display"></div>
-
               <div id="progress-container" style="display: none">
                 <div id="progress-bar"></div>
               </div>
-
               <div>
                 <button id="start-btn" aria-label="Start timer" title="Start">
                   <svg viewBox="0 0 24 24" id="play-icon">
@@ -64,7 +80,6 @@
                     <rect x="14" y="4" width="4" height="16"></rect>
                   </svg>
                 </button>
-
                 <button id="switch-btn" aria-label="Switch timer" title="Switch timer">
                   <svg viewBox="0 0 24 24" id="shuffle-icon">
                     <path
