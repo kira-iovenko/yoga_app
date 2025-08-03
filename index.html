@@ -16,35 +16,34 @@
 
         <div id="tab-content">
           <div id="timer-tab" class="tab-content" style="display: block">
-
             <div id="timer-container">
               <label class="setting-label sets">Sets</label>
               <div class="setting-row">
-                <button class="adjust-btn" data-target="sets" data-step="-1">−</button>
+                <button class="control adjust-btn" data-target="sets" data-step="-1">−</button>
                 <input type="text" id="sets-input" class="inline-input" value="8" />
-                <button class="adjust-btn" data-target="sets" data-step="1">+</button>
+                <button class="control adjust-btn" data-target="sets" data-step="1">+</button>
               </div>
 
               <label class="setting-label work">Workout</label>
               <div class="setting-row">
-                <button class="adjust-btn" data-target="work" data-step="-5">−</button>
+                <button class="control adjust-btn" data-target="work" data-step="-5">−</button>
                 <div class="time-input-wrapper">
                   <input type="text" id="work-mins" class="inline-input" value="05" data-type="minute" />
                   <span class="colon">:</span>
                   <input type="text" id="work-secs" class="inline-input" value="00" data-type="second" />
                 </div>
-                <button class="adjust-btn" data-target="work" data-step="5">+</button>
+                <button class="control adjust-btn" data-target="work" data-step="5">+</button>
               </div>
 
               <label class="setting-label rest">Rest</label>
               <div class="setting-row">
-                <button class="adjust-btn" data-target="rest" data-step="-5">−</button>
+                <button class="control adjust-btn" data-target="rest" data-step="-5">−</button>
                 <div class="time-input-wrapper">
                   <input type="text" id="rest-mins" class="inline-input" value="02" data-type="minute" />
                   <span class="colon">:</span>
                   <input type="text" id="rest-secs" class="inline-input" value="00" data-type="second" />
                 </div>
-                <button class="adjust-btn" data-target="rest" data-step="5">+</button>
+                <button class="control adjust-btn" data-target="rest" data-step="5">+</button>
               </div>
             </div>
 
@@ -64,28 +63,25 @@
               <span id="timer-widget-time"></span>
             </div>
 
-            <div id="timer-popup" style="display: none;">
-              <h2 id="timer-type">Workout Timer</h2>
-              <div id="timer-display"></div>
-              <div id="progress-container" style="display: none">
+            <div id="timer-popup" style="display: none">
+              <div id="progress-container">
                 <div id="progress-bar"></div>
               </div>
-              <div>
-                <button id="start-btn" aria-label="Start timer" title="Start">
-                  <svg viewBox="0 0 24 24" id="play-icon">
-                    <polygon points="6,4 20,12 6,20"></polygon>
-                  </svg>
-                  <svg viewBox="0 0 24 24" id="pause-icon" style="display: none">
-                    <rect x="6" y="4" width="4" height="16"></rect>
-                    <rect x="14" y="4" width="4" height="16"></rect>
-                  </svg>
-                </button>
-                <button id="switch-btn" aria-label="Switch timer" title="Switch timer">
-                  <svg viewBox="0 0 24 24" id="shuffle-icon">
-                    <path
-                      d="M16 3h5v5l-1.5-1.5L14 11l-4-4-2.5 2.5-2.5-2.5L3 9V4h5l3 3 4-4zM3 19v-5l1.5 1.5L10 13l4 4 2.5-2.5 2.5 2.5L21 15v5h-5l-3-3-4 4-3-3z" />
-                  </svg>
-                </button>
+
+              <div class="popup-header">
+                <button id="close-popup-btn" class="control" aria-label="Close">✕</button>
+                <div id="total-time-remaining">--:--</div>
+                <button id="sound-btn" class="control" aria-label="Sound">🔊</button>
+              </div>
+
+              <div class="popup-main">
+                <div id="phase-label">WORKOUT • Round 1 of 8</div>
+                <div id="countdown-timer">00:00</div>
+              </div>
+
+              <div class="popup-controls">
+                <button id="pause-resume-btn">Pause</button>
+                <button id="skip-btn">Skip</button>
               </div>
             </div>
           </div>

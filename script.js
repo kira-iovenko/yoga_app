@@ -6,14 +6,19 @@ const breakSecs = document.getElementById("rest-secs");
 
 const timerDisplay = document.getElementById("timer-display");
 const timerWidgetTime = document.getElementById("timer-widget-time");
-const timerTypeEl = document.getElementById("timer-type");
 const startBtn = document.getElementById("start-btn");
-const switchBtn = document.getElementById("switch-btn");
-const progressContainer = document.getElementById("progress-container");
 const progressBar = document.getElementById("progress-bar");
 
 const playIcon = document.getElementById("play-icon");
 const pauseIcon = document.getElementById("pause-icon");
+
+const timerPopup = document.getElementById("timer-popup");
+const closePopupBtn = document.getElementById("close-popup-btn");
+const pauseResumeBtn = document.getElementById("pause-resume-btn");
+const skipBtn = document.getElementById("skip-btn");
+const countdownTimer = document.getElementById("countdown-timer");
+const phaseLabel = document.getElementById("phase-label");
+const totalTimeRemaining = document.getElementById("total-time-remaining");
 
 let isWorkout = true;
 let currentSeconds = 0;
@@ -29,26 +34,30 @@ function getBreakSeconds() {
   return parseInt(breakMins.value) * 60 + parseInt(breakSecs.value);
 }
 
-function formatTime(seconds) {
-  const pad = (num) => num.toString().padStart(2, "0");
-  const h = Math.floor(seconds / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = seconds % 60;
-  return h > 0 ? `${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
-}
-
 function updateDisplay() {
-  timerDisplay.textContent = formatTime(currentSeconds);
+  const pad = (num) => num.toString().padStart(2, "0");
+  const formatTime = (s) => {
+    const h = Math.floor(s / 3600),
+      m = Math.floor((s % 3600) / 60),
+      sec = s % 60;
+    return h > 0 ? `${pad(h)}:${pad(m)}:${pad(sec)}` : `${pad(m)}:${pad(sec)}`;
+  };
 
   const sets = parseInt(setsInput.value) || 1;
-  const totalWorkoutSeconds = sets * (getWorkSeconds() + getBreakSeconds());
-  timerWidgetTime.textContent = formatTime(totalWorkoutSeconds);
+  const work = getWorkSeconds();
+  const rest = getBreakSeconds();
+  const totalSeconds = sets * (work + rest);
+  const elapsed = (round - 1) * (work + rest) + (isWorkout ? work - currentSeconds : work + rest - currentSeconds);
 
-  timerTypeEl.textContent = isWorkout ? `Work - Round ${round} of ${sets}` : `Rest - Round ${round} of ${sets}`;
+  countdownTimer.textContent = formatTime(currentSeconds);
+  timerWidgetTime.textContent = formatTime(totalSeconds);
+  totalTimeRemaining.textContent = formatTime(totalSeconds - elapsed);
 
-  const total = isWorkout ? getWorkSeconds() : getBreakSeconds();
-  const percent = (currentSeconds / total) * 100;
-  progressBar.style.width = percent + "%";
+  phaseLabel.textContent = `${isWorkout ? "WORKOUT" : "REST"} • Round ${round} of ${sets}`;
+
+  const percent = ((totalSeconds - elapsed) / totalSeconds) * 100;
+  progressBar.style.width = `${percent}%`;
+
 }
 
 // Reset the timer to initial state
@@ -63,13 +72,10 @@ function resetTimer() {
   pauseIcon.style.display = "none";
   startBtn.title = "Start";
 
-  progressContainer.style.display = "block";
-
   workoutMins.disabled = false;
   workoutSecs.disabled = false;
   breakMins.disabled = false;
   breakSecs.disabled = false;
-  switchBtn.disabled = false;
   setsInput.disabled = false;
 
   updateDisplay();
@@ -145,7 +151,6 @@ startBtn.addEventListener("click", () => {
     workoutSecs.disabled = false;
     breakMins.disabled = false;
     breakSecs.disabled = false;
-    switchBtn.disabled = false;
     setsInput.disabled = false;
   } else {
     if (getWorkSeconds() <= 0) {
@@ -162,12 +167,12 @@ startBtn.addEventListener("click", () => {
     workoutSecs.disabled = true;
     breakMins.disabled = true;
     breakSecs.disabled = true;
-    switchBtn.disabled = true;
     setsInput.disabled = true;
 
     playIcon.style.display = "none";
     pauseIcon.style.display = "block";
     startBtn.title = "Pause";
+    timerPopup.style.display = "flex";
 
     if (currentSeconds === 0) {
       currentSeconds = getWorkSeconds();
@@ -200,18 +205,6 @@ startBtn.addEventListener("click", () => {
   }
 });
 
-// Switch button
-switchBtn.addEventListener("click", () => {
-  if (isRunning) {
-    alert("Pause the timer before switching phases.");
-    return;
-  }
-  isWorkout = !isWorkout;
-  round = 1;
-  currentSeconds = isWorkout ? getWorkSeconds() : getBreakSeconds();
-  updateDisplay();
-});
-
 resetTimer();
 
 // Tab Switching Setup — runs once when page loads
@@ -226,4 +219,66 @@ tabButtons.forEach((button) => {
     const target = document.getElementById(button.dataset.tab);
     if (target) target.style.display = "block";
   });
+});
+
+// Close the timer popup, stop the timer, and reset everything
+closePopupBtn.addEventListener("click", () => {
+  timerPopup.style.display = "none";
+  clearInterval(timerInterval);
+  isRunning = false;
+  resetTimer();
+});
+
+// Toggle between pausing and resuming the timer
+pauseResumeBtn.addEventListener("click", () => {
+  if (isRunning) {
+    clearInterval(timerInterval);
+    isRunning = false;
+    pauseResumeBtn.textContent = "Resume";
+  } else {
+    isRunning = true;
+    pauseResumeBtn.textContent = "Pause";
+    timerInterval = setInterval(() => {
+      if (currentSeconds > 0) {
+        currentSeconds--;
+        updateDisplay();
+      } else {
+        if (!isWorkout) {
+          round++;
+          if (round > parseInt(setsInput.value)) {
+            alert("Workout complete! Great job!");
+            clearInterval(timerInterval);
+            isRunning = false;
+            resetTimer();
+            return;
+          }
+        }
+        isWorkout = !isWorkout;
+        currentSeconds = isWorkout ? getWorkSeconds() : getBreakSeconds();
+        updateDisplay();
+      }
+    }, 1000);
+  }
+});
+
+// Skip to the next phase (workout <-> rest) and advance the round
+skipBtn.addEventListener("click", () => {
+  if (isWorkout) {
+    // Skip workout → switch to rest
+    isWorkout = false;
+    currentSeconds = getBreakSeconds();
+  } else {
+    // Skip rest → increment round or finish if done
+    round++;
+    if (round > parseInt(setsInput.value)) {
+      alert("Workout complete! Great job!");
+      clearInterval(timerInterval);
+      isRunning = false;
+      resetTimer();
+      return;
+    }
+    isWorkout = true;
+    currentSeconds = getWorkSeconds();
+  }
+  updateDisplay();
 });
