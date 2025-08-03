@@ -9,8 +9,7 @@ const timerWidgetTime = document.getElementById("timer-widget-time");
 const startBtn = document.getElementById("start-btn");
 const progressBar = document.getElementById("progress-bar");
 
-const playIcon = document.getElementById("play-icon");
-const pauseIcon = document.getElementById("pause-icon");
+const startIcon = document.getElementById("start-icon");
 
 const timerPopup = document.getElementById("timer-popup");
 const closePopupBtn = document.getElementById("close-popup-btn");
@@ -20,9 +19,13 @@ const countdownTimer = document.getElementById("countdown-timer");
 const phaseLabel = document.getElementById("phase-label");
 const totalTimeRemaining = document.getElementById("total-time-remaining");
 
+const successPopup = document.getElementById("success-popup");
+const closeBtn = document.getElementById("close-btn");
+const restartBtn = document.getElementById("restart-btn");
+
 let isWorkout = true;
 let currentSeconds = 0;
-let round = 1;
+let set = 1;
 let timerInterval = null;
 let isRunning = false;
 
@@ -47,30 +50,29 @@ function updateDisplay() {
   const work = getWorkSeconds();
   const rest = getBreakSeconds();
   const totalSeconds = sets * (work + rest);
-  const elapsed = (round - 1) * (work + rest) + (isWorkout ? work - currentSeconds : work + rest - currentSeconds);
+  const elapsed = (set - 1) * (work + rest) + (isWorkout ? work - currentSeconds : work + rest - currentSeconds);
 
   countdownTimer.textContent = formatTime(currentSeconds);
   timerWidgetTime.textContent = formatTime(totalSeconds);
   totalTimeRemaining.textContent = formatTime(totalSeconds - elapsed);
 
-  phaseLabel.textContent = `${isWorkout ? "WORKOUT" : "REST"} • Round ${round} of ${sets}`;
+  phaseLabel.textContent = `${isWorkout ? "WORKOUT" : "REST"} • Set ${set}/${sets}`;
 
   const percent = ((totalSeconds - elapsed) / totalSeconds) * 100;
   progressBar.style.width = `${percent}%`;
-
 }
 
 // Reset the timer to initial state
-function resetTimer() {
+function resetTimer(flag = false) {
   clearInterval(timerInterval);
-  isRunning = false;
-  round = 1;
+  isRunning = flag;
+  set = 1;
   isWorkout = true;
   currentSeconds = getWorkSeconds();
 
-  playIcon.style.display = "block";
-  pauseIcon.style.display = "none";
+  startIcon.classList.replace("fa-pause", "fa-play");
   startBtn.title = "Start";
+  pauseResumeBtn.innerHTML = `<i class="fas fa-pause"></i> Pause`;
 
   workoutMins.disabled = false;
   workoutSecs.disabled = false;
@@ -143,8 +145,7 @@ startBtn.addEventListener("click", () => {
   if (isRunning) {
     clearInterval(timerInterval);
     isRunning = false;
-    playIcon.style.display = "block";
-    pauseIcon.style.display = "none";
+    startIcon.classList.replace("fa-pause", "fa-play");
     startBtn.title = "Start";
 
     workoutMins.disabled = false;
@@ -169,15 +170,15 @@ startBtn.addEventListener("click", () => {
     breakSecs.disabled = true;
     setsInput.disabled = true;
 
-    playIcon.style.display = "none";
-    pauseIcon.style.display = "block";
+    startIcon.classList.replace("fa-play", "fa-pause");
     startBtn.title = "Pause";
     timerPopup.style.display = "flex";
+    successPopup.style.display = "none";
 
     if (currentSeconds === 0) {
       currentSeconds = getWorkSeconds();
       isWorkout = true;
-      round = 1;
+      set = 1;
     }
 
     updateDisplay();
@@ -188,12 +189,12 @@ startBtn.addEventListener("click", () => {
         updateDisplay();
       } else {
         if (!isWorkout) {
-          round++;
-          if (round > parseInt(setsInput.value)) {
-            alert("Workout complete! Great job!");
+          set++;
+          if (set > parseInt(setsInput.value)) {
             clearInterval(timerInterval);
             isRunning = false;
-            resetTimer();
+            timerPopup.style.display = "none";
+            successPopup.style.display = "flex";
             return;
           }
         }
@@ -224,6 +225,7 @@ tabButtons.forEach((button) => {
 // Close the timer popup, stop the timer, and reset everything
 closePopupBtn.addEventListener("click", () => {
   timerPopup.style.display = "none";
+  successPopup.style.display = "none";
   clearInterval(timerInterval);
   isRunning = false;
   resetTimer();
@@ -234,22 +236,22 @@ pauseResumeBtn.addEventListener("click", () => {
   if (isRunning) {
     clearInterval(timerInterval);
     isRunning = false;
-    pauseResumeBtn.textContent = "Resume";
+    pauseResumeBtn.innerHTML = `<i class="fas fa-play"></i> Resume`;
   } else {
     isRunning = true;
-    pauseResumeBtn.textContent = "Pause";
+    pauseResumeBtn.innerHTML = `<i class="fas fa-pause"></i> Pause`;
     timerInterval = setInterval(() => {
       if (currentSeconds > 0) {
         currentSeconds--;
         updateDisplay();
       } else {
         if (!isWorkout) {
-          round++;
-          if (round > parseInt(setsInput.value)) {
-            alert("Workout complete! Great job!");
+          set++;
+          if (set > parseInt(setsInput.value)) {
             clearInterval(timerInterval);
             isRunning = false;
-            resetTimer();
+            timerPopup.style.display = "none";
+            successPopup.style.display = "flex";
             return;
           }
         }
@@ -269,16 +271,50 @@ skipBtn.addEventListener("click", () => {
     currentSeconds = getBreakSeconds();
   } else {
     // Skip rest → increment round or finish if done
-    round++;
-    if (round > parseInt(setsInput.value)) {
-      alert("Workout complete! Great job!");
+    set++;
+    if (set > parseInt(setsInput.value)) {
       clearInterval(timerInterval);
       isRunning = false;
-      resetTimer();
+      timerPopup.style.display = "none";
+      successPopup.style.display = "flex";
       return;
     }
     isWorkout = true;
     currentSeconds = getWorkSeconds();
   }
   updateDisplay();
+});
+
+closeBtn.addEventListener("click", () => {
+  timerPopup.style.display = "none";
+  successPopup.style.display = "none";
+  resetTimer();
+});
+
+
+restartBtn.addEventListener("click", () => {
+  timerPopup.style.display = "flex";
+  successPopup.style.display = "none";
+  resetTimer(true);
+
+  timerInterval = setInterval(() => {
+    if (currentSeconds > 0) {
+      currentSeconds--;
+      updateDisplay();
+    } else {
+      if (!isWorkout) {
+        set++;
+        if (set > parseInt(setsInput.value)) {
+          clearInterval(timerInterval);
+          isRunning = false;
+          timerPopup.style.display = "none";
+          successPopup.style.display = "flex";
+          return;
+        }
+      }
+      isWorkout = !isWorkout;
+      currentSeconds = isWorkout ? getWorkSeconds() : getBreakSeconds();
+      updateDisplay();
+    }
+  }, 1000);
 });

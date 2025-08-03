@@ -34,7 +34,12 @@ html {
 body {
   margin: 0;
   line-height: inherit;
-  background: #f0f4f8;
+  line-height: inherit;
+  background-image: url("/images/yoga-bg.png");
+  background-size: cover;           /* Fill screen */
+  background-position: center;      /* Center image */
+  background-repeat: no-repeat;     /* Avoid tiling */
+  background-attachment: fixed;     /* Optional: parallax-like effect on scroll */
 }
 
 /*
@@ -738,5 +743,67 @@ label {
 }
 
 .popup-controls button:hover {
+  background-color: #4a8ad4;
+}
+
+
+#success-popup {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 32px;
+  text-align: center;
+  z-index: 9999;
+}
+
+.success-message {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.success-emoji {
+  font-size: 6rem;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.success-message h2 {
+  font-size: 2em;
+  color: #2e7d32;
+  margin-bottom: 12px;
+}
+
+.success-message p {
+  font-size: 1.1em;
+  color: #444;
+}
+
+.success-actions {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+  width: 100%;
+}
+
+.success-actions button {
+  flex: 1;
+  padding: 12px;
+  font-size: 1.2em;
+  border: none;
+  border-radius: 8px;
+  background-color: #5c9ded;
+  color: white;
+  font-weight: bold;
+}
+
+.success-actions button:hover {
   background-color: #4a8ad4;
 }

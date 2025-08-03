@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Yoga Timer</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      integrity="sha512-..."
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -19,44 +25,50 @@
             <div id="timer-container">
               <label class="setting-label sets">Sets</label>
               <div class="setting-row">
-                <button class="control adjust-btn" data-target="sets" data-step="-1">−</button>
+                <button class="control adjust-btn" data-target="sets" data-step="-1">
+                  <i class="fas fa-minus"></i>
+                </button>
                 <input type="text" id="sets-input" class="inline-input" value="8" />
-                <button class="control adjust-btn" data-target="sets" data-step="1">+</button>
+                <button class="control adjust-btn" data-target="sets" data-step="1">
+                  <i class="fas fa-plus"></i>
+                </button>
               </div>
 
               <label class="setting-label work">Workout</label>
               <div class="setting-row">
-                <button class="control adjust-btn" data-target="work" data-step="-5">−</button>
+                <button class="control adjust-btn" data-target="work" data-step="-5">
+                  <i class="fas fa-minus"></i>
+                </button>
                 <div class="time-input-wrapper">
                   <input type="text" id="work-mins" class="inline-input" value="05" data-type="minute" />
                   <span class="colon">:</span>
                   <input type="text" id="work-secs" class="inline-input" value="00" data-type="second" />
                 </div>
-                <button class="control adjust-btn" data-target="work" data-step="5">+</button>
+                <button class="control adjust-btn" data-target="work" data-step="5">
+                  <i class="fas fa-plus"></i>
+                </button>
               </div>
 
               <label class="setting-label rest">Rest</label>
               <div class="setting-row">
-                <button class="control adjust-btn" data-target="rest" data-step="-5">−</button>
+                <button class="control adjust-btn" data-target="rest" data-step="-5">
+                  <i class="fas fa-minus"></i>
+                </button>
                 <div class="time-input-wrapper">
                   <input type="text" id="rest-mins" class="inline-input" value="02" data-type="minute" />
                   <span class="colon">:</span>
                   <input type="text" id="rest-secs" class="inline-input" value="00" data-type="second" />
                 </div>
-                <button class="control adjust-btn" data-target="rest" data-step="5">+</button>
+                <button class="control adjust-btn" data-target="rest" data-step="5">
+                  <i class="fas fa-plus"></i>
+                </button>
               </div>
             </div>
 
             <div id="timer-widget">
               <div id="timer-widget-title">
                 <button id="start-btn" aria-label="Start timer" title="Start">
-                  <svg viewBox="0 0 24 24" id="play-icon">
-                    <polygon points="6,4 20,12 6,20"></polygon>
-                  </svg>
-                  <svg viewBox="0 0 24 24" id="pause-icon" style="display: none">
-                    <rect x="6" y="4" width="4" height="16"></rect>
-                    <rect x="14" y="4" width="4" height="16"></rect>
-                  </svg>
+                  <i class="fas fa-play" id="start-icon"></i>
                 </button>
                 <p>Start timer</p>
               </div>
@@ -69,9 +81,13 @@
               </div>
 
               <div class="popup-header">
-                <button id="close-popup-btn" class="control" aria-label="Close">✕</button>
+                <button id="close-popup-btn" class="control" aria-label="Close">
+                  <i class="fas fa-xmark"></i>
+                </button>
                 <div id="total-time-remaining">--:--</div>
-                <button id="sound-btn" class="control" aria-label="Sound">🔊</button>
+                <button id="sound-btn" class="control" aria-label="Sound">
+                  <i class="fas fa-volume-down"></i>
+                </button>
               </div>
 
               <div class="popup-main">
@@ -80,8 +96,26 @@
               </div>
 
               <div class="popup-controls">
-                <button id="pause-resume-btn">Pause</button>
-                <button id="skip-btn">Skip</button>
+                <button id="pause-resume-btn">
+                  <i class="fas fa-pause"></i>
+                  Pause
+                </button>
+                <button id="skip-btn">
+                  <i class="fas fa-forward"></i>
+                  Skip
+                </button>
+              </div>
+            </div>
+
+            <div id="success-popup" style="display: none">
+              <div class="success-message">
+                <div class="success-emoji">🎉</div>
+                <h2>Workout Complete!</h2>
+                <p>Great job finishing your session.</p>
+              </div>
+              <div class="success-actions">
+                <button id="close-btn"><i class="fas fa-times"></i> Close</button>
+                <button id="restart-btn"><i class="fas fa-redo-alt"></i> Restart</button>
               </div>
             </div>
           </div>
