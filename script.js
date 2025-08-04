@@ -37,6 +37,23 @@ function getBreakSeconds() {
   return parseInt(breakMins.value) * 60 + parseInt(breakSecs.value);
 }
 
+function fadeInPopup(el) {
+  el.classList.add("popup-fade");
+  el.style.display = "flex";
+  requestAnimationFrame(() => {
+    el.classList.add("show");
+    el.classList.remove("hide");
+  });
+}
+
+function fadeOutPopup(el) {
+  el.classList.remove("show");
+  el.classList.add("hide");
+  setTimeout(() => {
+    el.style.display = "none";
+  }, 300);
+}
+
 function updateDisplay() {
   const pad = (num) => num.toString().padStart(2, "0");
   const formatTime = (s) => {
@@ -172,8 +189,8 @@ startBtn.addEventListener("click", () => {
 
     startIcon.classList.replace("fa-play", "fa-pause");
     startBtn.title = "Pause";
-    timerPopup.style.display = "flex";
-    successPopup.style.display = "none";
+    fadeInPopup(timerPopup);
+    fadeOutPopup(successPopup);
 
     if (currentSeconds === 0) {
       currentSeconds = getWorkSeconds();
@@ -193,8 +210,8 @@ startBtn.addEventListener("click", () => {
           if (set > parseInt(setsInput.value)) {
             clearInterval(timerInterval);
             isRunning = false;
-            timerPopup.style.display = "none";
-            successPopup.style.display = "flex";
+            fadeOutPopup(timerPopup);
+            fadeInPopup(successPopup);
             return;
           }
         }
@@ -224,8 +241,8 @@ tabButtons.forEach((button) => {
 
 // Close the timer popup, stop the timer, and reset everything
 closePopupBtn.addEventListener("click", () => {
-  timerPopup.style.display = "none";
-  successPopup.style.display = "none";
+  fadeOutPopup(timerPopup);
+  fadeOutPopup(successPopup);
   clearInterval(timerInterval);
   isRunning = false;
   resetTimer();
@@ -250,8 +267,8 @@ pauseResumeBtn.addEventListener("click", () => {
           if (set > parseInt(setsInput.value)) {
             clearInterval(timerInterval);
             isRunning = false;
-            timerPopup.style.display = "none";
-            successPopup.style.display = "flex";
+            fadeOutPopup(timerPopup);
+            fadeInPopup(successPopup);
             return;
           }
         }
@@ -275,8 +292,8 @@ skipBtn.addEventListener("click", () => {
     if (set > parseInt(setsInput.value)) {
       clearInterval(timerInterval);
       isRunning = false;
-      timerPopup.style.display = "none";
-      successPopup.style.display = "flex";
+      fadeOutPopup(timerPopup);
+      fadeInPopup(successPopup);
       return;
     }
     isWorkout = true;
@@ -286,15 +303,15 @@ skipBtn.addEventListener("click", () => {
 });
 
 closeBtn.addEventListener("click", () => {
-  timerPopup.style.display = "none";
-  successPopup.style.display = "none";
+  fadeOutPopup(timerPopup);
+  fadeOutPopup(successPopup);
   resetTimer();
 });
 
 
 restartBtn.addEventListener("click", () => {
-  timerPopup.style.display = "flex";
-  successPopup.style.display = "none";
+  fadeInPopup(timerPopup);
+  fadeOutPopup(successPopup);
   resetTimer(true);
 
   timerInterval = setInterval(() => {
@@ -307,8 +324,8 @@ restartBtn.addEventListener("click", () => {
         if (set > parseInt(setsInput.value)) {
           clearInterval(timerInterval);
           isRunning = false;
-          timerPopup.style.display = "none";
-          successPopup.style.display = "flex";
+          fadeOutPopup(timerPopup);
+          fadeInPopup(successPopup);
           return;
         }
       }
@@ -318,3 +335,4 @@ restartBtn.addEventListener("click", () => {
     }
   }, 1000);
 });
+

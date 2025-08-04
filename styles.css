@@ -35,11 +35,11 @@ body {
   margin: 0;
   line-height: inherit;
   line-height: inherit;
-  background-image: url("/images/yoga-bg.png");
-  background-size: cover;           /* Fill screen */
-  background-position: center;      /* Center image */
-  background-repeat: no-repeat;     /* Avoid tiling */
-  background-attachment: fixed;     /* Optional: parallax-like effect on scroll */
+  background-image: url("images/yoga-bg.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 /*
@@ -665,7 +665,6 @@ label {
   line-height: 1.6;
 }
 
-
 #timer-popup {
   position: absolute;
   inset: 0;
@@ -746,7 +745,6 @@ label {
   background-color: #4a8ad4;
 }
 
-
 #success-popup {
   position: absolute;
   inset: 0;
@@ -806,4 +804,24 @@ label {
 
 .success-actions button:hover {
   background-color: #4a8ad4;
+}
+
+/* === Popup Animation Classes === */
+.popup-fade {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.popup-fade.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.popup-fade.hide {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
 }
