@@ -79,6 +79,28 @@ function updateDisplay() {
   progressBar.style.width = `${percent}%`;
 }
 
+function updateAdjustButtonStates() {
+  const sets = parseInt(setsInput.value);
+  document.querySelectorAll('[data-target="sets"][data-step="-1"]').forEach((btn) => (btn.disabled = sets <= 1));
+  document.querySelectorAll('[data-target="sets"][data-step="1"]').forEach((btn) => (btn.disabled = sets >= 99));
+
+  const updateTimeButtons = (prefix) => {
+    const mins = parseInt(document.getElementById(`${prefix}-mins`).value);
+    const secs = parseInt(document.getElementById(`${prefix}-secs`).value);
+    const total = mins * 60 + secs;
+
+    document
+      .querySelectorAll(`[data-target="${prefix}"][data-step="-5"]`)
+      .forEach((btn) => (btn.disabled = total <= 0));
+    document
+      .querySelectorAll(`[data-target="${prefix}"][data-step="5"]`)
+      .forEach((btn) => (btn.disabled = total >= 3599));
+  };
+
+  updateTimeButtons("work");
+  updateTimeButtons("rest");
+}
+
 // Reset the timer to initial state
 function resetTimer(flag = false) {
   clearInterval(timerInterval);
@@ -109,6 +131,7 @@ function validateTimeInputs(input) {
       currentSeconds = isWorkout ? getWorkSeconds() : getBreakSeconds();
       updateDisplay();
     }
+    updateAdjustButtonStates();
   });
 }
 
@@ -118,6 +141,7 @@ function validateTimeInputs(input) {
 setsInput.addEventListener("input", () => {
   let value = parseInt(setsInput.value) || 1;
   setsInput.value = Math.max(1, Math.min(99, value));
+  updateAdjustButtonStates();
 });
 
 document.querySelectorAll(".adjust-btn").forEach((btn) => {
@@ -154,6 +178,7 @@ document.querySelectorAll(".adjust-btn").forEach((btn) => {
       currentSeconds = isWorkout ? getWorkSeconds() : getBreakSeconds();
       updateDisplay();
     }
+    updateAdjustButtonStates();
   });
 });
 
@@ -224,6 +249,8 @@ startBtn.addEventListener("click", () => {
 });
 
 resetTimer();
+updateAdjustButtonStates();
+
 
 // Tab Switching Setup — runs once when page loads
 const tabButtons = document.querySelectorAll(".tab-btn");
@@ -308,7 +335,6 @@ closeBtn.addEventListener("click", () => {
   resetTimer();
 });
 
-
 restartBtn.addEventListener("click", () => {
   fadeInPopup(timerPopup);
   fadeOutPopup(successPopup);
@@ -335,4 +361,3 @@ restartBtn.addEventListener("click", () => {
     }
   }, 1000);
 });
-
