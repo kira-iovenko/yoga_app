@@ -4,12 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Yoga Timer</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-      integrity="sha512-..."
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -76,15 +71,14 @@
             </div>
 
             <div id="timer-popup" style="display: none">
-              <div id="progress-container">
-                <div id="progress-bar"></div>
-              </div>
-
               <div class="popup-header">
                 <button id="close-popup-btn" class="control" aria-label="Close">
                   <i class="fas fa-xmark"></i>
                 </button>
-                <div id="total-time-remaining">--:--</div>
+                <div id="total-time-wrapper">
+                  <div id="total-time-label">REMAINING</div>
+                  <div id="total-time-remaining">--:--</div>
+                </div>
                 <button id="sound-btn" class="control" aria-label="Sound">
                   <i class="fas fa-volume-down"></i>
                 </button>
@@ -92,17 +86,21 @@
 
               <div class="popup-main">
                 <div id="phase-label">WORKOUT • Round 1 of 8</div>
-                <div id="countdown-timer">00:00</div>
+                <div id="progress-container">
+                  <svg id="progress-bar" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+                    <circle id="progress-bar__bg" stroke="#f0f1f2" stroke-width="5" fill="transparent" r="45" cx="50" cy="50" />
+                    <circle id="progress-bar__circle" stroke="#5c9ded" stroke-width="5" fill="transparent" r="45" cx="50" cy="50" />
+                  </svg>
+                  <div id="countdown-timer">--:--</div>
+                </div>
               </div>
 
               <div class="popup-controls">
                 <button id="pause-resume-btn">
-                  <i class="fas fa-pause"></i>
-                  Pause
+                  <i class="fas fa-pause"></i> Pause
                 </button>
                 <button id="skip-btn">
-                  <i class="fas fa-forward"></i>
-                  Skip
+                  <i class="fas fa-forward"></i> Skip
                 </button>
               </div>
             </div>
@@ -114,8 +112,12 @@
                 <p>Great job finishing your session.</p>
               </div>
               <div class="success-actions">
-                <button id="close-btn"><i class="fas fa-times"></i> Close</button>
-                <button id="restart-btn"><i class="fas fa-redo-alt"></i> Restart</button>
+                <button id="close-btn">
+                  <i class="fas fa-times"></i> Close
+                </button>
+                <button id="restart-btn">
+                  <i class="fas fa-redo-alt"></i> Restart
+                </button>
               </div>
             </div>
           </div>

@@ -350,12 +350,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   display: none;
 }
 
-svg {
-  fill: white;
-  width: 24px;
-  height: 24px;
-}
-
 /* 
 General styles for the widget
 */
@@ -679,7 +673,7 @@ label {
   gap: 28px;
 }
 
-#progress-container {
+/* #progress-container {
   background: #f0f1f2;
   width: 100%;
   height: 16px;
@@ -692,12 +686,75 @@ label {
   background: #5c9ded;
   width: 100%;
   transition: width 1s linear;
+} */
+
+#progress-container {
+  position: relative;
+  /* width: 200px;
+  height: 200px; */
+  margin: 0 auto;
+  width: 100%;
+  /* max-width: 300px; */
+  aspect-ratio: 1;
+}
+
+#progress-bar {
+  width: 100%;
+  height: 100%;
+  display: block;
+  transform: rotate(270deg);
+}
+
+#progress-bar__bg,
+#progress-bar__circle {
+  fill: transparent;
+  r: 45;
+  cx: 50;
+  cy: 50;
+}
+
+#progress-bar__bg {
+  stroke: #f0f1f2;
+}
+
+#progress-bar__circle {
+  stroke: #5c9ded;
+  stroke-linecap: round;
+  stroke-dasharray: 565.48; /* this will be dynamically set in JS too */
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s linear;
+  transform-origin: center;
+}
+
+#countdown-timer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 6em;
+  font-weight: bold;
+  line-height: 1em;
 }
 
 .popup-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+#total-time-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.2;
+}
+
+#total-time-label {
+  font-size: 0.75em;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
 }
 
 #total-time-remaining {
@@ -714,15 +771,8 @@ label {
 }
 
 #phase-label {
-  font-size: 1em;
-  color: #666;
+  font-size: 1.2em;
   margin-bottom: 10px;
-}
-
-#countdown-timer {
-  font-size: 6em;
-  font-weight: bold;
-  line-height: 1em;
 }
 
 .popup-controls {

@@ -8,6 +8,7 @@ const timerDisplay = document.getElementById("timer-display");
 const timerWidgetTime = document.getElementById("timer-widget-time");
 const startBtn = document.getElementById("start-btn");
 const progressBar = document.getElementById("progress-bar");
+const progressCircle = document.getElementById("progress-bar__circle");
 
 const startIcon = document.getElementById("start-icon");
 
@@ -28,6 +29,9 @@ let currentSeconds = 0;
 let set = 1;
 let timerInterval = null;
 let isRunning = false;
+let radius = progressCircle.r.baseVal.value;
+let circumference = 2 * Math.PI * radius;
+progressCircle.style.strokeDasharray = `${circumference}`;
 
 function getWorkSeconds() {
   return parseInt(workoutMins.value) * 60 + parseInt(workoutSecs.value);
@@ -54,6 +58,12 @@ function fadeOutPopup(el) {
   }, 300);
 }
 
+function updateDisplayImmediate() {
+  progressCircle.style.transition = "none";
+  updateDisplay();
+  requestAnimationFrame(() => (progressCircle.style.transition = "stroke-dashoffset 1s linear"));
+}
+
 function updateDisplay() {
   const pad = (num) => num.toString().padStart(2, "0");
   const formatTime = (s) => {
@@ -75,8 +85,11 @@ function updateDisplay() {
 
   phaseLabel.textContent = `${isWorkout ? "WORKOUT" : "REST"} • Set ${set}/${sets}`;
 
-  const percent = ((totalSeconds - elapsed) / totalSeconds) * 100;
-  progressBar.style.width = `${percent}%`;
+  const phaseTotal = isWorkout ? work : rest;
+  const phaseElapsed = phaseTotal - currentSeconds;
+  const percent = phaseElapsed / phaseTotal;
+  const offset = percent * circumference;
+  progressCircle.style.strokeDashoffset = offset;
 }
 
 function updateAdjustButtonStates() {
@@ -119,7 +132,7 @@ function resetTimer(flag = false) {
   breakSecs.disabled = false;
   setsInput.disabled = false;
 
-  updateDisplay();
+  updateDisplayImmediate();
 }
 
 // Validate time inputs to ensure they are within 00-59 range
@@ -223,7 +236,7 @@ startBtn.addEventListener("click", () => {
       set = 1;
     }
 
-    updateDisplay();
+    updateDisplayImmediate();
 
     timerInterval = setInterval(() => {
       if (currentSeconds > 0) {
@@ -242,7 +255,7 @@ startBtn.addEventListener("click", () => {
         }
         isWorkout = !isWorkout;
         currentSeconds = isWorkout ? getWorkSeconds() : getBreakSeconds();
-        updateDisplay();
+        updateDisplayImmediate();
       }
     }, 1000);
   }
@@ -250,7 +263,6 @@ startBtn.addEventListener("click", () => {
 
 resetTimer();
 updateAdjustButtonStates();
-
 
 // Tab Switching Setup — runs once when page loads
 const tabButtons = document.querySelectorAll(".tab-btn");
@@ -301,7 +313,7 @@ pauseResumeBtn.addEventListener("click", () => {
         }
         isWorkout = !isWorkout;
         currentSeconds = isWorkout ? getWorkSeconds() : getBreakSeconds();
-        updateDisplay();
+        updateDisplayImmediate();
       }
     }, 1000);
   }
@@ -326,7 +338,7 @@ skipBtn.addEventListener("click", () => {
     isWorkout = true;
     currentSeconds = getWorkSeconds();
   }
-  updateDisplay();
+  updateDisplayImmediate();
 });
 
 closeBtn.addEventListener("click", () => {
@@ -357,7 +369,7 @@ restartBtn.addEventListener("click", () => {
       }
       isWorkout = !isWorkout;
       currentSeconds = isWorkout ? getWorkSeconds() : getBreakSeconds();
-      updateDisplay();
+      updateDisplayImmediate();
     }
   }, 1000);
 });
