@@ -23,23 +23,38 @@
                 <button class="control adjust-btn" data-target="sets" data-step="-1">
                   <i class="fas fa-minus"></i>
                 </button>
-                <input type="text" id="sets-input" class="inline-input" value="3" />
+                <input type="text" id="sets-input" class="inline-input" value="4" />
                 <button class="control adjust-btn" data-target="sets" data-step="1">
                   <i class="fas fa-plus"></i>
                 </button>
               </div>
 
-              <label class="setting-label work">Workout</label>
+              <label class="setting-label prepare">Prepare</label>
               <div class="setting-row">
-                <button class="control adjust-btn" data-target="work" data-step="-5">
+                <button class="control adjust-btn" data-target="prepare" data-step="-5">
                   <i class="fas fa-minus"></i>
                 </button>
                 <div class="time-input-wrapper">
-                  <input type="text" id="work-mins" class="inline-input" value="05" data-type="minute" />
+                  <input type="text" id="prepare-mins" class="inline-input" value="00" data-type="minute" />
                   <span class="colon">:</span>
-                  <input type="text" id="work-secs" class="inline-input" value="00" data-type="second" />
+                  <input type="text" id="prepare-secs" class="inline-input" value="30" data-type="second" />
                 </div>
-                <button class="control adjust-btn" data-target="work" data-step="5">
+                <button class="control adjust-btn" data-target="prepare" data-step="5">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+
+              <label class="setting-label flow">Flow</label>
+              <div class="setting-row">
+                <button class="control adjust-btn" data-target="flow" data-step="-5">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <div class="time-input-wrapper">
+                  <input type="text" id="flow-mins" class="inline-input" value="03" data-type="minute" />
+                  <span class="colon">:</span>
+                  <input type="text" id="flow-secs" class="inline-input" value="00" data-type="second" />
+                </div>
+                <button class="control adjust-btn" data-target="flow" data-step="5">
                   <i class="fas fa-plus"></i>
                 </button>
               </div>
@@ -50,11 +65,26 @@
                   <i class="fas fa-minus"></i>
                 </button>
                 <div class="time-input-wrapper">
-                  <input type="text" id="rest-mins" class="inline-input" value="02" data-type="minute" />
+                  <input type="text" id="rest-mins" class="inline-input" value="00" data-type="minute" />
                   <span class="colon">:</span>
-                  <input type="text" id="rest-secs" class="inline-input" value="00" data-type="second" />
+                  <input type="text" id="rest-secs" class="inline-input" value="45" data-type="second" />
                 </div>
                 <button class="control adjust-btn" data-target="rest" data-step="5">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+
+              <label class="setting-label relaxation">Relaxation</label>
+              <div class="setting-row">
+                <button class="control adjust-btn" data-target="relax" data-step="-5">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <div class="time-input-wrapper">
+                  <input type="text" id="relax-mins" class="inline-input" value="02" data-type="minute" />
+                  <span class="colon">:</span>
+                  <input type="text" id="relax-secs" class="inline-input" value="00" data-type="second" />
+                </div>
+                <button class="control adjust-btn" data-target="relax" data-step="5">
                   <i class="fas fa-plus"></i>
                 </button>
               </div>
@@ -85,7 +115,7 @@
               </div>
 
               <div class="popup-main">
-                <div id="phase-label">WORKOUT • Round 1 of 8</div>
+                <div id="phase-label"></div>
                 <div id="progress-container">
                   <svg id="progress-bar" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
                     <circle id="progress-bar__bg" stroke="#f0f1f2" stroke-width="5" fill="transparent" r="45" cx="50" cy="50" />

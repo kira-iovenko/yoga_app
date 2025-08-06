@@ -373,7 +373,6 @@ General styles for the widget
   display: flex;
   flex-direction: column;
   padding: 32px;
-  gap: 28px;
   background: white;
   font-family: sans-serif;
 }
@@ -517,14 +516,6 @@ label {
   margin-top: 4px;
 }
 
-.setting-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
 .inline-input {
   background: transparent;
   border: none;
@@ -580,9 +571,8 @@ label {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 15px;
-  margin-left: 64px;
-  margin-right: 64px;
+  gap: 10px;
+  margin: 0 64px;
 }
 
 .setting-row > .control {
@@ -602,12 +592,20 @@ label {
   color: #666; /* grey */
 }
 
-.setting-label.work {
+.setting-label.prepare {
+  color: #b8860b; /* golden yellow */
+}
+
+.setting-label.flow {
   color: #2e7d32; /* green */
 }
 
 .setting-label.rest {
   color: #5c9ded; /* blue */
+}
+
+.setting-label.relaxation {
+  color: #9c27b0; /* purple */
 }
 
 #timer-display {

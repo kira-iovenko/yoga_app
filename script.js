@@ -1,8 +1,12 @@
 const setsInput = document.getElementById("sets-input");
-const workoutMins = document.getElementById("work-mins");
-const workoutSecs = document.getElementById("work-secs");
-const breakMins = document.getElementById("rest-mins");
-const breakSecs = document.getElementById("rest-secs");
+const prepareMins = document.getElementById("prepare-mins");
+const prepareSecs = document.getElementById("prepare-secs");
+const flowMins = document.getElementById("flow-mins");
+const flowSecs = document.getElementById("flow-secs");
+const restMins = document.getElementById("rest-mins");
+const restSecs = document.getElementById("rest-secs");
+const relaxMins = document.getElementById("relax-mins");
+const relaxSecs = document.getElementById("relax-secs");
 
 const timerDisplay = document.getElementById("timer-display");
 const timerWidgetTime = document.getElementById("timer-widget-time");
@@ -24,8 +28,8 @@ const successPopup = document.getElementById("success-popup");
 const closeBtn = document.getElementById("close-btn");
 const restartBtn = document.getElementById("restart-btn");
 
-let isWorkout = true;
-let currentSeconds = 0;
+let phase = "prepare"; // "prepare", "flow", "rest", "relaxation"
+let currentSeconds = getPrepareSeconds();
 let set = 1;
 let timerInterval = null;
 let isRunning = false;
@@ -33,12 +37,20 @@ let radius = progressCircle.r.baseVal.value;
 let circumference = 2 * Math.PI * radius;
 progressCircle.style.strokeDasharray = `${circumference}`;
 
-function getWorkSeconds() {
-  return parseInt(workoutMins.value) * 60 + parseInt(workoutSecs.value);
+function getPrepareSeconds() {
+  return parseInt(prepareMins.value) * 60 + parseInt(prepareSecs.value);
 }
 
-function getBreakSeconds() {
-  return parseInt(breakMins.value) * 60 + parseInt(breakSecs.value);
+function getFlowSeconds() {
+  return parseInt(flowMins.value) * 60 + parseInt(flowSecs.value);
+}
+
+function getRestSeconds() {
+  return parseInt(restMins.value) * 60 + parseInt(restSecs.value);
+}
+
+function getRelaxationSeconds() {
+  return parseInt(relaxMins.value) * 60 + parseInt(relaxSecs.value);
 }
 
 function fadeInPopup(el) {
@@ -74,18 +86,34 @@ function updateDisplay() {
   };
 
   const sets = parseInt(setsInput.value) || 1;
-  const work = getWorkSeconds();
-  const rest = getBreakSeconds();
-  const totalSeconds = sets * (work + rest);
-  const elapsed = (set - 1) * (work + rest) + (isWorkout ? work - currentSeconds : work + rest - currentSeconds);
+  const prepare = getPrepareSeconds();
+  const flow = getFlowSeconds();
+  const rest = getRestSeconds();
+  const relax = getRelaxationSeconds();
+  const totalSeconds = prepare + sets * (flow + rest) + relax;
+  let elapsed = 0;
+  if (phase === "prepare") {
+    elapsed = prepare - currentSeconds;
+  } else if (phase === "flow") {
+    elapsed = prepare + (set - 1) * (flow + rest) + (flow - currentSeconds);
+  } else if (phase === "rest") {
+    elapsed = prepare + (set - 1) * (flow + rest) + flow + (rest - currentSeconds);
+  } else if (phase === "relaxation") {
+    elapsed = prepare + sets * (flow + rest) + (relax - currentSeconds);
+  }
 
   countdownTimer.textContent = formatTime(currentSeconds);
   timerWidgetTime.textContent = formatTime(totalSeconds);
   totalTimeRemaining.textContent = formatTime(totalSeconds - elapsed);
 
-  phaseLabel.textContent = `${isWorkout ? "WORKOUT" : "REST"} • Set ${set}/${sets}`;
+  phaseLabel.textContent = `${phase.toUpperCase()}${phase === "flow" || phase === "rest" ? ` • Set ${set}/${sets}` : ""}`;
 
-  const phaseTotal = isWorkout ? work : rest;
+  let phaseTotal = 0;
+  if (phase === "prepare") phaseTotal = prepare;
+  else if (phase === "flow") phaseTotal = flow;
+  else if (phase === "rest") phaseTotal = rest;
+  else if (phase === "relaxation") phaseTotal = relax;
+
   const phaseElapsed = phaseTotal - currentSeconds;
   const percent = phaseElapsed / phaseTotal;
   const offset = percent * circumference;
@@ -110,26 +138,32 @@ function updateAdjustButtonStates() {
       .forEach((btn) => (btn.disabled = total >= 3599));
   };
 
-  updateTimeButtons("work");
+  updateTimeButtons("prepare");
+  updateTimeButtons("flow");
   updateTimeButtons("rest");
+  updateTimeButtons("relax");
 }
 
 // Reset the timer to initial state
 function resetTimer(flag = false) {
   clearInterval(timerInterval);
   isRunning = flag;
-  set = 1;
-  isWorkout = true;
-  currentSeconds = getWorkSeconds();
+  set = 0;
+  phase = "prepare";
+  currentSeconds = getPrepareSeconds();
 
   startIcon.classList.replace("fa-pause", "fa-play");
   startBtn.title = "Start";
   pauseResumeBtn.innerHTML = `<i class="fas fa-pause"></i> Pause`;
 
-  workoutMins.disabled = false;
-  workoutSecs.disabled = false;
-  breakMins.disabled = false;
-  breakSecs.disabled = false;
+  prepareMins.disabled = false;
+  prepareSecs.disabled = false;
+  flowMins.disabled = false;
+  flowSecs.disabled = false;
+  restMins.disabled = false;
+  restSecs.disabled = false;
+  relaxMins.disabled = false;
+  relaxSecs.disabled = false;
   setsInput.disabled = false;
 
   updateDisplayImmediate();
@@ -141,7 +175,6 @@ function validateTimeInputs(input) {
     let num = Math.min(parseInt(input.value) || 0, 59);
     input.value = num.toString().padStart(2, "0");
     if (!isRunning) {
-      currentSeconds = isWorkout ? getWorkSeconds() : getBreakSeconds();
       updateDisplay();
     }
     updateAdjustButtonStates();
@@ -149,7 +182,7 @@ function validateTimeInputs(input) {
 }
 
 // Input listeners
-[workoutMins, workoutSecs, breakMins, breakSecs].forEach(validateTimeInputs);
+[prepareMins, prepareSecs, flowMins, flowSecs, restMins, restSecs, relaxMins, relaxSecs].forEach(validateTimeInputs);
 
 setsInput.addEventListener("input", () => {
   let value = parseInt(setsInput.value) || 1;
@@ -188,7 +221,6 @@ document.querySelectorAll(".adjust-btn").forEach((btn) => {
     }
 
     if (!isRunning) {
-      currentSeconds = isWorkout ? getWorkSeconds() : getBreakSeconds();
       updateDisplay();
     }
     updateAdjustButtonStates();
@@ -203,26 +235,46 @@ startBtn.addEventListener("click", () => {
     startIcon.classList.replace("fa-pause", "fa-play");
     startBtn.title = "Start";
 
-    workoutMins.disabled = false;
-    workoutSecs.disabled = false;
-    breakMins.disabled = false;
-    breakSecs.disabled = false;
+    prepareMins.disabled = false;
+    prepareSecs.disabled = false;
+    flowMins.disabled = false;
+    flowSecs.disabled = false;
+    restMins.disabled = false;
+    restSecs.disabled = false;
+    relaxMins.disabled = false;
+    relaxSecs.disabled = false;
     setsInput.disabled = false;
   } else {
-    if (getWorkSeconds() <= 0) {
-      alert("Please enter a valid workout time.");
+    if (parseInt(setsInput.value) < 1 || parseInt(setsInput.value) > 99) {
+      alert("Please enter a valid number of sets (1-99).");
       return;
     }
-    if (getBreakSeconds() < 0) {
-      alert("Please enter a valid break time (0 or more seconds).");
+    if (getPrepareSeconds() < 0 || getPrepareSeconds() > 3599) {
+      alert("Please enter a valid prepare time.");
+      return;
+    }
+    if (getFlowSeconds() <= 0 || getFlowSeconds() > 3599) {
+      alert("Please enter a valid flow time.");
+      return;
+    }
+    if (getRestSeconds() < 0 || getRestSeconds() > 3599) {
+      alert("Please enter a valid rest time.");
+      return;
+    }
+    if (getRelaxationSeconds() < 0 || getRelaxationSeconds() > 3599) {
+      alert("Please enter a valid relaxation time.");
       return;
     }
 
     isRunning = true;
-    workoutMins.disabled = true;
-    workoutSecs.disabled = true;
-    breakMins.disabled = true;
-    breakSecs.disabled = true;
+    prepareMins.disabled = true;
+    prepareSecs.disabled = true;
+    flowMins.disabled = true;
+    flowSecs.disabled = true;
+    restMins.disabled = true;
+    restSecs.disabled = true;
+    relaxMins.disabled = true;
+    relaxSecs.disabled = true;
     setsInput.disabled = true;
 
     startIcon.classList.replace("fa-play", "fa-pause");
@@ -231,8 +283,8 @@ startBtn.addEventListener("click", () => {
     fadeOutPopup(successPopup);
 
     if (currentSeconds === 0) {
-      currentSeconds = getWorkSeconds();
-      isWorkout = true;
+      phase = "flow";
+      currentSeconds = getFlowSeconds();
       set = 1;
     }
 
@@ -243,18 +295,30 @@ startBtn.addEventListener("click", () => {
         currentSeconds--;
         updateDisplay();
       } else {
-        if (!isWorkout) {
+        if (phase === "prepare") {
+          phase = "flow";
+          set = 1;
+          currentSeconds = getFlowSeconds();
+        } else if (phase === "flow") {
+          phase = "rest";
+          currentSeconds = getRestSeconds();
+        } else if (phase === "rest") {
           set++;
           if (set > parseInt(setsInput.value)) {
-            clearInterval(timerInterval);
-            isRunning = false;
-            fadeOutPopup(timerPopup);
-            fadeInPopup(successPopup);
-            return;
+            phase = "relaxation";
+            currentSeconds = getRelaxationSeconds();
+          } else {
+            phase = "flow";
+            currentSeconds = getFlowSeconds();
           }
+        } else if (phase === "relaxation") {
+          phase = "prepare"
+          clearInterval(timerInterval);
+          isRunning = false;
+          fadeOutPopup(timerPopup);
+          fadeInPopup(successPopup);
+          return;
         }
-        isWorkout = !isWorkout;
-        currentSeconds = isWorkout ? getWorkSeconds() : getBreakSeconds();
         updateDisplayImmediate();
       }
     }, 1000);
@@ -280,10 +344,10 @@ tabButtons.forEach((button) => {
 
 // Close the timer popup, stop the timer, and reset everything
 closePopupBtn.addEventListener("click", () => {
-  fadeOutPopup(timerPopup);
-  fadeOutPopup(successPopup);
   clearInterval(timerInterval);
   isRunning = false;
+  fadeOutPopup(timerPopup);
+  fadeOutPopup(successPopup);
   resetTimer();
 });
 
@@ -301,18 +365,30 @@ pauseResumeBtn.addEventListener("click", () => {
         currentSeconds--;
         updateDisplay();
       } else {
-        if (!isWorkout) {
+        if (phase === "prepare") {
+          phase = "flow";
+          set = 1;
+          currentSeconds = getFlowSeconds();
+        } else if (phase === "flow") {
+          phase = "rest";
+          currentSeconds = getRestSeconds();
+        } else if (phase === "rest") {
           set++;
           if (set > parseInt(setsInput.value)) {
-            clearInterval(timerInterval);
-            isRunning = false;
-            fadeOutPopup(timerPopup);
-            fadeInPopup(successPopup);
-            return;
+            phase = "relaxation";
+            currentSeconds = getRelaxationSeconds();
+          } else {
+            phase = "flow";
+            currentSeconds = getFlowSeconds();
           }
+        } else if (phase === "relaxation") {
+          phase = "prepare";
+          clearInterval(timerInterval);
+          isRunning = false;
+          fadeOutPopup(timerPopup);
+          fadeInPopup(successPopup);
+          return;
         }
-        isWorkout = !isWorkout;
-        currentSeconds = isWorkout ? getWorkSeconds() : getBreakSeconds();
         updateDisplayImmediate();
       }
     }, 1000);
@@ -321,22 +397,29 @@ pauseResumeBtn.addEventListener("click", () => {
 
 // Skip to the next phase (workout <-> rest) and advance the round
 skipBtn.addEventListener("click", () => {
-  if (isWorkout) {
-    // Skip workout → switch to rest
-    isWorkout = false;
-    currentSeconds = getBreakSeconds();
-  } else {
-    // Skip rest → increment round or finish if done
+  if (phase === "prepare") {
+    phase = "flow";
+    set = 1;
+    currentSeconds = getFlowSeconds();
+  } else if (phase === "flow") {
+    phase = "rest";
+    currentSeconds = getRestSeconds();
+  } else if (phase === "rest") {
     set++;
     if (set > parseInt(setsInput.value)) {
-      clearInterval(timerInterval);
-      isRunning = false;
-      fadeOutPopup(timerPopup);
-      fadeInPopup(successPopup);
-      return;
+      phase = "relaxation";
+      currentSeconds = getRelaxationSeconds();
+    } else {
+      phase = "flow";
+      currentSeconds = getFlowSeconds();
     }
-    isWorkout = true;
-    currentSeconds = getWorkSeconds();
+  } else if (phase === "relaxation") {
+    phase = "prepare";
+    clearInterval(timerInterval);
+    isRunning = false;
+    fadeOutPopup(timerPopup);
+    fadeInPopup(successPopup);
+    return;
   }
   updateDisplayImmediate();
 });
@@ -357,18 +440,30 @@ restartBtn.addEventListener("click", () => {
       currentSeconds--;
       updateDisplay();
     } else {
-      if (!isWorkout) {
+      if (phase === "prepare") {
+        phase = "flow";
+        set = 1;
+        currentSeconds = getFlowSeconds();
+      } else if (phase === "flow") {
+        phase = "rest";
+        currentSeconds = getRestSeconds();
+      } else if (phase === "rest") {
         set++;
         if (set > parseInt(setsInput.value)) {
-          clearInterval(timerInterval);
-          isRunning = false;
-          fadeOutPopup(timerPopup);
-          fadeInPopup(successPopup);
-          return;
+          phase = "relaxation";
+          currentSeconds = getRelaxationSeconds();
+        } else {
+          phase = "flow";
+          currentSeconds = getFlowSeconds();
         }
+      } else if (phase === "relaxation") {
+        phase = "prepare";
+        clearInterval(timerInterval);
+        isRunning = false;
+        fadeOutPopup(timerPopup);
+        fadeInPopup(successPopup);
+        return;
       }
-      isWorkout = !isWorkout;
-      currentSeconds = isWorkout ? getWorkSeconds() : getBreakSeconds();
       updateDisplayImmediate();
     }
   }, 1000);
