@@ -12,7 +12,7 @@
       <div id="widget-container">
         <div id="tab-header">
           <button class="tab-btn active" data-tab="timer-tab">Timer</button>
-          <button class="tab-btn" data-tab="plan-tab">Plan</button>
+          <button class="tab-btn" data-tab="sequences-tab">Sequences</button>
         </div>
 
         <div id="tab-content">
@@ -152,26 +152,32 @@
             </div>
           </div>
 
-          <div id="plan-tab" class="tab-content" style="display: none">
-            <div class="widget">
-              <h2>Yoga Plan</h2>
-              <ul class="yoga-list">
-                <li><strong>Mountain Pose</strong> - Stand tall, grounding your feet. Improves posture and balance.</li>
-                <li>
-                  <strong>Downward Dog</strong> - Hands and feet on the floor, hips raised. Stretches spine and
-                  hamstrings.
-                </li>
-                <li><strong>Child’s Pose</strong> - Kneel and rest your torso forward. Calms the body and mind.</li>
-                <li>
-                  <strong>Cobra Pose</strong> - Lie on your stomach, lift chest with arms. Opens the chest and
-                  strengthens the spine.
-                </li>
-                <li>
-                  <strong>Tree Pose</strong> - Balance on one leg with the other foot on your thigh. Builds focus and
-                  stability.
-                </li>
-              </ul>
+          <div id="sequences-tab" class="tab-content" style="display: none">
+            <h2 class="sequences-title">My Sequences</h2>
+            <button id="create-sequence-btn" class="sequence-card-btn">
+              <i class="fas fa-plus fa-xl" style="color: #5c9ded;"></i>
+              <span>Create Sequence</span>
+            </button>
+            <div class="sequence-card">
+              <div class="sequence-header">
+                <strong>Morning Flow</strong>
+                <div class="sequence-actions">
+                  <button class="control" title="Play">
+                    <i class="fas fa-play"></i>
+                  </button>
+                  <button class="control" title="Edit">
+                    <i class="fas fa-pen"></i>
+                  </button>
+                  <button class="control" title="Delete">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>              </div>
+              <div class="sequence-details">
+                <span class="badge time-badge">32m 45s</span>
+                <span class="badge count-badge">5 poses</span>
+              </div>
             </div>
+
           </div>
         </div>
       </div>

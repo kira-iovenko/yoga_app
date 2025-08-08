@@ -282,7 +282,10 @@ startBtn.addEventListener("click", () => {
     fadeInPopup(timerPopup);
     fadeOutPopup(successPopup);
 
-    if (currentSeconds === 0) {
+    if (phase === "prepare" && getPrepareSeconds() > 0) {
+      currentSeconds = getPrepareSeconds();
+      set = 0;
+    } else {
       phase = "flow";
       currentSeconds = getFlowSeconds();
       set = 1;
