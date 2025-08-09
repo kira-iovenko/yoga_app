@@ -341,7 +341,7 @@ tabButtons.forEach((button) => {
     tabContents.forEach((content) => (content.style.display = "none"));
     button.classList.add("active");
     const target = document.getElementById(button.dataset.tab);
-    if (target) target.style.display = "block";
+    if (target) target.style.display = "flex";
   });
 });
 
@@ -471,3 +471,19 @@ restartBtn.addEventListener("click", () => {
     }
   }, 1000);
 });
+
+const sequencePopup = document.getElementById("sequence-popup");
+const createSequenceBtn = document.getElementById("create-sequence-btn");
+const backToSequencesBtn = document.getElementById("back-to-sequences");
+
+if (createSequenceBtn) {
+  createSequenceBtn.addEventListener("click", () => {
+    fadeInPopup(sequencePopup);
+  });
+}
+
+if (backToSequencesBtn) {
+  backToSequencesBtn.addEventListener("click", () => {
+    fadeOutPopup(sequencePopup);
+  });
+}
