@@ -154,7 +154,7 @@
                 <div id="total-time-remaining">--:--</div>
               </div>
               <button id="sound-btn" class="control" aria-label="Sound">
-                <i class="fas fa-volume-down"></i>
+                <i class="fas fa-volume-down my n"></i>
               </button>
             </div>
 
@@ -238,6 +238,40 @@
                 <i class="fas fa-plus" style="color: #5c9ded;"></i>
                 <span>Add Pose</span>
               </button>
+            </div>
+          </div>
+
+          <div id="pose-popup" class="popup-fade" style="display: none">
+            <div class="popup-header">
+              <button id="back-to-sequence" class="control" aria-label="Back">
+                <i class="fas fa-arrow-left"></i>
+              </button>
+              <h2 class="title">Add Pose</h2>
+              <span style="width: 40px;"></span>
+            </div>
+
+            <div class="popup-main">
+              <label class="setting-label">Pose Name</label>
+              <input type="text" id="pose-name" class="inline-input" placeholder="e.g. Sun Salutation" />
+
+              <label class="setting-label">Duration</label>
+              <div class="time-input-wrapper">
+                <input type="text" id="pose-mins" class="inline-input" value="00" data-type="minute" />
+                <span class="colon">:</span>
+                <input type="text" id="pose-secs" class="inline-input" value="30" data-type="second" />
+              </div>
+
+              <label class="setting-label">Type</label>
+              <select id="pose-type" class="inline-input">
+                <option value="Pose">🧘 Pose</option>
+                <option value="Breathing">🫁 Breathing</option>
+                <option value="Meditation">🧘‍♀️ Meditation</option>
+              </select>
+
+              <div class="popup-controls">
+                <button id="save-pose-btn"><i class="fas fa-check"></i> Save</button>
+                <button id="cancel-pose-btn"><i class="fas fa-times"></i> Cancel</button>
+              </div>
             </div>
           </div>
 

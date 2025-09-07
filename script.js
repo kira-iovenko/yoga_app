@@ -487,3 +487,71 @@ if (backToSequencesBtn) {
     fadeOutPopup(sequencePopup);
   });
 }
+
+const posePopup = document.getElementById("pose-popup");
+const addPoseBtn = document.getElementById("add-pose-btn");
+const backToSequenceBtn = document.getElementById("back-to-sequence");
+const savePoseBtn = document.getElementById("save-pose-btn");
+const cancelPoseBtn = document.getElementById("cancel-pose-btn");
+
+const poseNameInput = document.getElementById("pose-name");
+const poseMinsInput = document.getElementById("pose-mins");
+const poseSecsInput = document.getElementById("pose-secs");
+const poseTypeInput = document.getElementById("pose-type");
+
+const sequenceList = document.querySelector("#sequence-popup .list-container");
+
+if (addPoseBtn) {
+  addPoseBtn.addEventListener("click", () => {
+    fadeOutPopup(sequencePopup);
+    fadeInPopup(posePopup);
+  });
+}
+
+if (backToSequenceBtn || cancelPoseBtn) {
+  [backToSequenceBtn, cancelPoseBtn].forEach(btn => {
+    btn.addEventListener("click", () => {
+      fadeOutPopup(posePopup);
+      fadeInPopup(sequencePopup);
+    });
+  });
+}
+
+if (savePoseBtn) {
+  savePoseBtn.addEventListener("click", () => {
+    const name = poseNameInput.value.trim() || "Untitled Pose";
+    const mins = poseMinsInput.value.padStart(2, "0");
+    const secs = poseSecsInput.value.padStart(2, "0");
+    const type = poseTypeInput.value;
+
+    // Create new card
+    const card = document.createElement("div");
+    card.classList.add("card-container");
+    card.innerHTML = `
+      <div class="card-header">
+        <strong>${name}</strong>
+        <div class="card-actions">
+          <button class="control" title="Edit"><i class="fas fa-pen"></i></button>
+          <button class="control" title="Delete"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+      <div class="card-details">
+        <span class="badge time-badge">${parseInt(mins)}m ${parseInt(secs)}s</span>
+        <span class="badge count-badge">${type}</span>
+      </div>
+    `;
+
+    // ✅ Just append to the list
+    sequenceList.appendChild(card);
+
+    // Reset form
+    poseNameInput.value = "";
+    poseMinsInput.value = "00";
+    poseSecsInput.value = "30";
+    poseTypeInput.value = "Pose";
+
+    fadeOutPopup(posePopup);
+    fadeInPopup(sequencePopup);
+  });
+}
+

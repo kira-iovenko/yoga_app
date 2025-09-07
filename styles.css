@@ -1021,3 +1021,18 @@ label {
   padding: 32px;
   gap: 16px;
 }
+
+/* === Create Poses Popup Classes === */
+
+#pose-popup {
+  position: absolute;
+  inset: 0;
+  background: #ffffff;
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  z-index: 9999;
+  padding: 32px;
+  gap: 16px;
+}
