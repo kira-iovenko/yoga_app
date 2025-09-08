@@ -24,7 +24,9 @@
                   <button class="control adjust-btn" data-target="sets" data-step="-1">
                     <i class="fas fa-minus"></i>
                   </button>
-                  <input type="text" id="sets-input" class="inline-input" value="4" />
+                  <div class="input-wrapper">
+                    <input type="text" id="sets-input" class="inline-input" value="4" />
+                  </div>
                   <button class="control adjust-btn" data-target="sets" data-step="1">
                     <i class="fas fa-plus"></i>
                   </button>
@@ -37,7 +39,7 @@
                   <button class="control adjust-btn" data-target="prepare" data-step="-5">
                     <i class="fas fa-minus"></i>
                   </button>
-                  <div class="time-input-wrapper">
+                  <div class="input-wrapper">
                     <input type="text" id="prepare-mins" class="inline-input" value="00" data-type="minute" />
                     <span class="colon">:</span>
                     <input type="text" id="prepare-secs" class="inline-input" value="30" data-type="second" />
@@ -54,7 +56,7 @@
                   <button class="control adjust-btn" data-target="flow" data-step="-5">
                     <i class="fas fa-minus"></i>
                   </button>
-                  <div class="time-input-wrapper">
+                  <div class="input-wrapper">
                     <input type="text" id="flow-mins" class="inline-input" value="03" data-type="minute" />
                     <span class="colon">:</span>
                     <input type="text" id="flow-secs" class="inline-input" value="00" data-type="second" />
@@ -71,7 +73,7 @@
                   <button class="control adjust-btn" data-target="rest" data-step="-5">
                     <i class="fas fa-minus"></i>
                   </button>
-                  <div class="time-input-wrapper">
+                  <div class="input-wrapper">
                     <input type="text" id="rest-mins" class="inline-input" value="00" data-type="minute" />
                     <span class="colon">:</span>
                     <input type="text" id="rest-secs" class="inline-input" value="45" data-type="second" />
@@ -88,7 +90,7 @@
                   <button class="control adjust-btn" data-target="relax" data-step="-5">
                     <i class="fas fa-minus"></i>
                   </button>
-                  <div class="time-input-wrapper">
+                  <div class="input-wrapper">
                     <input type="text" id="relax-mins" class="inline-input" value="02" data-type="minute" />
                     <span class="colon">:</span>
                     <input type="text" id="relax-secs" class="inline-input" value="00" data-type="second" />
@@ -252,29 +254,44 @@
 
             <div class="popup-main">
               <label class="setting-label">Pose Name</label>
-              <input type="text" id="pose-name" class="inline-input" placeholder="e.g. Sun Salutation" />
+              <div class="setting-row">
+                <input type="text" id="pose-name" class="inline-input" placeholder="e.g. Sun Salutation" />
+              </div>
 
               <label class="setting-label">Duration</label>
-              <div class="time-input-wrapper">
-                <input type="text" id="pose-mins" class="inline-input" value="00" data-type="minute" />
-                <span class="colon">:</span>
-                <input type="text" id="pose-secs" class="inline-input" value="30" data-type="second" />
+              <div class="setting-row">
+                <button class="control adjust-btn" data-target="pose" data-step="-5">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <div class="input-wrapper">
+                  <input type="text" id="pose-mins" class="inline-input" value="00" data-type="minute" />
+                  <span class="colon">:</span>
+                  <input type="text" id="pose-secs" class="inline-input" value="30" data-type="second" />
+                </div>
+                <button class="control adjust-btn" data-target="pose" data-step="5">
+                  <i class="fas fa-plus"></i>
+                </button>
               </div>
 
               <label class="setting-label">Type</label>
-              <select id="pose-type" class="inline-input">
-                <option value="Pose">🧘 Pose</option>
-                <option value="Breathing">🫁 Breathing</option>
-                <option value="Meditation">🧘‍♀️ Meditation</option>
-              </select>
-
-              <div class="popup-controls">
-                <button id="save-pose-btn"><i class="fas fa-check"></i> Save</button>
-                <button id="cancel-pose-btn"><i class="fas fa-times"></i> Cancel</button>
+              <div class="setting-row">
+                <select id="pose-type" class="inline-input">
+                  <option value="Pose">🧘 Pose</option>
+                  <option value="Breathing">🫁 Breathing</option>
+                  <option value="Meditation">🧘‍♀️ Meditation</option>
+                </select>
               </div>
             </div>
-          </div>
 
+            <div class="popup-controls">
+              <button id="save-pose-btn">
+                <i class="fas fa-check"></i> Save
+              </button>
+              <button id="cancel-pose-btn">
+                <i class="fas fa-times"></i> Cancel
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

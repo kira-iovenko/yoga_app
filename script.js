@@ -142,6 +142,7 @@ function updateAdjustButtonStates() {
   updateTimeButtons("flow");
   updateTimeButtons("rest");
   updateTimeButtons("relax");
+  updateTimeButtons("pose");
 }
 
 // Reset the timer to initial state
@@ -501,6 +502,8 @@ const poseTypeInput = document.getElementById("pose-type");
 
 const sequenceList = document.querySelector("#sequence-popup .list-container");
 
+[poseMinsInput, poseSecsInput].forEach(validateTimeInputs);
+
 if (addPoseBtn) {
   addPoseBtn.addEventListener("click", () => {
     fadeOutPopup(sequencePopup);
@@ -519,7 +522,9 @@ if (backToSequenceBtn || cancelPoseBtn) {
 
 if (savePoseBtn) {
   savePoseBtn.addEventListener("click", () => {
-    const name = poseNameInput.value.trim() || "Untitled Pose";
+    if (!validatePoseForm()) return;
+
+    const name = poseNameInput.value.trim();
     const mins = poseMinsInput.value.padStart(2, "0");
     const secs = poseSecsInput.value.padStart(2, "0");
     const type = poseTypeInput.value;
@@ -553,5 +558,27 @@ if (savePoseBtn) {
     fadeOutPopup(posePopup);
     fadeInPopup(sequencePopup);
   });
-}
 
+  // Validate pose form before saving
+  function validatePoseForm() {
+    const name = poseNameInput.value.trim();
+    const totalSeconds = parseInt(poseMinsInput.value) * 60 + parseInt(poseSecsInput.value);
+
+    if (!name) {
+      alert("Pose name cannot be empty.");
+      return false;
+    }
+
+    if (totalSeconds <= 0) {
+      alert("Duration must be greater than 00:00.");
+      return false;
+    }
+
+    if (totalSeconds > 3599) {
+      alert("Duration cannot exceed 59:59.");
+      return false;
+    }
+
+    return true;
+  }
+}
