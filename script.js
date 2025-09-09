@@ -59,14 +59,20 @@ function fadeInPopup(el) {
   requestAnimationFrame(() => {
     el.classList.add("show");
     el.classList.remove("hide");
+    if (typeof callback === "function") {
+      setTimeout(callback, 300);
+    }
   });
 }
 
-function fadeOutPopup(el) {
+function fadeOutPopup(el, callback) {
   el.classList.remove("show");
   el.classList.add("hide");
   setTimeout(() => {
     el.style.display = "none";
+    if (typeof callback === "function") {
+      callback();
+    }
   }, 300);
 }
 
@@ -490,6 +496,7 @@ if (backToSequencesBtn) {
 }
 
 const posePopup = document.getElementById("pose-popup");
+const posePopupTitle = document.querySelector("#pose-popup .title");
 const addPoseBtn = document.getElementById("add-pose-btn");
 const backToSequenceBtn = document.getElementById("back-to-sequence");
 const savePoseBtn = document.getElementById("save-pose-btn");
@@ -504,8 +511,21 @@ const sequenceList = document.querySelector("#sequence-popup .list-container");
 
 [poseMinsInput, poseSecsInput].forEach(validateTimeInputs);
 
+function resetPoseForm() {
+  fadeOutPopup(posePopup , () => {
+    poseNameInput.value = "";
+    poseMinsInput.value = "00";
+    poseSecsInput.value = "30";
+    poseTypeInput.value = "Pose";
+    posePopupTitle.textContent = "Add Pose";
+  });
+  fadeInPopup(sequencePopup);
+}
+
 if (addPoseBtn) {
   addPoseBtn.addEventListener("click", () => {
+    editingPoseCard = null;
+    posePopupTitle.textContent = "Add Pose";
     fadeOutPopup(sequencePopup);
     fadeInPopup(posePopup);
   });
@@ -513,12 +533,11 @@ if (addPoseBtn) {
 
 if (backToSequenceBtn || cancelPoseBtn) {
   [backToSequenceBtn, cancelPoseBtn].forEach(btn => {
-    btn.addEventListener("click", () => {
-      fadeOutPopup(posePopup);
-      fadeInPopup(sequencePopup);
-    });
+    btn.addEventListener("click", () => resetPoseForm());
   });
 }
+
+let editingPoseCard = null;
 
 if (savePoseBtn) {
   savePoseBtn.addEventListener("click", () => {
@@ -529,34 +548,62 @@ if (savePoseBtn) {
     const secs = poseSecsInput.value.padStart(2, "0");
     const type = poseTypeInput.value;
 
-    // Create new card
-    const card = document.createElement("div");
-    card.classList.add("card-container");
-    card.innerHTML = `
-      <div class="card-header">
-        <strong>${name}</strong>
-        <div class="card-actions">
-          <button class="control" title="Edit"><i class="fas fa-pen"></i></button>
-          <button class="control" title="Delete"><i class="fas fa-trash"></i></button>
+    if (editingPoseCard) {
+      // Update existing card
+      editingPoseCard.querySelector("strong").textContent = name;
+      editingPoseCard.querySelector(".time-badge").textContent = `${parseInt(mins)}m ${parseInt(secs)}s`;
+      editingPoseCard.querySelector(".count-badge").textContent = type;
+
+      // Keep dataset in sync so the next Edit reads the latest values
+      Object.assign(editingPoseCard.dataset, { name, mins, secs, type });
+
+      editingPoseCard = null; // reset
+    } else {
+      // Create new card
+      const card = document.createElement("div");
+      card.classList.add("card-container");
+      card.innerHTML = `
+        <div class="card-header">
+          <strong>${name}</strong>
+          <div class="card-actions">
+            <button class="control" title="Edit"><i class="fas fa-pen"></i></button>
+            <button class="control" title="Delete"><i class="fas fa-trash"></i></button>
+          </div>
         </div>
-      </div>
-      <div class="card-details">
-        <span class="badge time-badge">${parseInt(mins)}m ${parseInt(secs)}s</span>
-        <span class="badge count-badge">${type}</span>
-      </div>
-    `;
+        <div class="card-details">
+          <span class="badge time-badge">${parseInt(mins)}m ${parseInt(secs)}s</span>
+          <span class="badge count-badge">${type}</span>
+        </div>
+      `;
 
-    // ✅ Just append to the list
-    sequenceList.appendChild(card);
+      // Keep the latest values
+      Object.assign(card.dataset, { name, mins, secs, type });
 
-    // Reset form
-    poseNameInput.value = "";
-    poseMinsInput.value = "00";
-    poseSecsInput.value = "30";
-    poseTypeInput.value = "Pose";
+      // Handle edit — always read fresh values from dataset
+      card.querySelector('[title="Edit"]').addEventListener("click", () => {
+        poseNameInput.value = card.dataset.name;
+        poseMinsInput.value = card.dataset.mins;
+        poseSecsInput.value = card.dataset.secs;
+        poseTypeInput.value = card.dataset.type;
+        
+        editingPoseCard = card;
+        posePopupTitle.textContent = "Edit Pose";
+        fadeOutPopup(sequencePopup);
+        fadeInPopup(posePopup);
+      });
 
-    fadeOutPopup(posePopup);
-    fadeInPopup(sequencePopup);
+      // Handle delete with confirmation
+      card.querySelector('[title="Delete"]').addEventListener("click", () => {
+        if (confirm("Are you sure you want to delete this pose?")) {
+          card.remove();
+        }
+      });
+
+      // ✅ Append to the list
+      sequenceList.appendChild(card);
+    }
+
+    resetPoseForm();
   });
 
   // Validate pose form before saving
