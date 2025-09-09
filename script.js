@@ -495,6 +495,9 @@ if (backToSequencesBtn) {
   });
 }
 
+// ==== Poses ====
+
+// ==== Elements ====
 const posePopup = document.getElementById("pose-popup");
 const posePopupTitle = document.querySelector("#pose-popup .title");
 const addPoseBtn = document.getElementById("add-pose-btn");
@@ -511,6 +514,17 @@ const sequenceList = document.querySelector("#sequence-popup .list-container");
 
 [poseMinsInput, poseSecsInput].forEach(validateTimeInputs);
 
+// ==== Data source ====
+// Pre-fill with mocked poses (these were previously in HTML)
+let poses = [
+  { name: "Sun Salutation", mins: "03", secs: "00", type: "Pose" },
+  { name: "Breathing Warmup", mins: "02", secs: "30", type: "Breathing" },
+  { name: "Mindful Rest", mins: "05", secs: "00", type: "Meditation" }
+];
+
+let editingPoseIndex = null;
+
+// ==== Helpers ====
 function resetPoseForm() {
   fadeOutPopup(posePopup , () => {
     poseNameInput.value = "";
@@ -522,9 +536,77 @@ function resetPoseForm() {
   fadeInPopup(sequencePopup);
 }
 
+function validatePoseForm() {
+  const name = poseNameInput.value.trim();
+  const totalSeconds = parseInt(poseMinsInput.value) * 60 + parseInt(poseSecsInput.value);
+
+  if (!name) {
+    alert("Pose name cannot be empty.");
+    return false;
+  }
+
+  if (totalSeconds <= 0) {
+    alert("Duration must be greater than 00:00.");
+    return false;
+  }
+
+  if (totalSeconds > 3599) {
+    alert("Duration cannot exceed 59:59.");
+    return false;
+  }
+
+  return true;
+}
+
+function renderPoses() {
+  sequenceList.innerHTML = "";
+
+  poses.forEach((pose, index) => {
+    const card = document.createElement("div");
+    card.classList.add("card-container");
+    card.innerHTML = `
+      <div class="card-header">
+        <strong>${pose.name}</strong>
+        <div class="card-actions">
+          <button class="control" title="Edit"><i class="fas fa-pen"></i></button>
+          <button class="control" title="Delete"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+      <div class="card-details">
+        <span class="badge time-badge">${parseInt(pose.mins)}m ${parseInt(pose.secs)}s</span>
+        <span class="badge count-badge">${pose.type}</span>
+      </div>
+    `;
+
+    // Edit button
+    card.querySelector('[title="Edit"]').addEventListener("click", () => {
+      poseNameInput.value = pose.name;
+      poseMinsInput.value = pose.mins;
+      poseSecsInput.value = pose.secs;
+      poseTypeInput.value = pose.type;
+
+      editingPoseIndex = index;
+      posePopupTitle.textContent = "Edit Pose";
+      fadeOutPopup(sequencePopup);
+      fadeInPopup(posePopup);
+    });
+
+    // Delete button
+    card.querySelector('[title="Delete"]').addEventListener("click", () => {
+      if (confirm("Are you sure you want to delete this pose?")) {
+        poses.splice(index, 1);
+        renderPoses();
+      }
+    });
+
+    sequenceList.appendChild(card);
+  });
+}
+
+// ==== Events ====
 if (addPoseBtn) {
   addPoseBtn.addEventListener("click", () => {
-    editingPoseCard = null;
+    editingPoseIndex = null;
     posePopupTitle.textContent = "Add Pose";
     fadeOutPopup(sequencePopup);
     fadeInPopup(posePopup);
@@ -537,8 +619,6 @@ if (backToSequenceBtn || cancelPoseBtn) {
   });
 }
 
-let editingPoseCard = null;
-
 if (savePoseBtn) {
   savePoseBtn.addEventListener("click", () => {
     if (!validatePoseForm()) return;
@@ -548,84 +628,19 @@ if (savePoseBtn) {
     const secs = poseSecsInput.value.padStart(2, "0");
     const type = poseTypeInput.value;
 
-    if (editingPoseCard) {
-      // Update existing card
-      editingPoseCard.querySelector("strong").textContent = name;
-      editingPoseCard.querySelector(".time-badge").textContent = `${parseInt(mins)}m ${parseInt(secs)}s`;
-      editingPoseCard.querySelector(".count-badge").textContent = type;
-
-      // Keep dataset in sync so the next Edit reads the latest values
-      Object.assign(editingPoseCard.dataset, { name, mins, secs, type });
-
-      editingPoseCard = null; // reset
+    if (editingPoseIndex !== null) {
+      // Update existing pose
+      poses[editingPoseIndex] = { name, mins, secs, type };
+      editingPoseIndex = null; // reset
     } else {
-      // Create new card
-      const card = document.createElement("div");
-      card.classList.add("card-container");
-      card.innerHTML = `
-        <div class="card-header">
-          <strong>${name}</strong>
-          <div class="card-actions">
-            <button class="control" title="Edit"><i class="fas fa-pen"></i></button>
-            <button class="control" title="Delete"><i class="fas fa-trash"></i></button>
-          </div>
-        </div>
-        <div class="card-details">
-          <span class="badge time-badge">${parseInt(mins)}m ${parseInt(secs)}s</span>
-          <span class="badge count-badge">${type}</span>
-        </div>
-      `;
-
-      // Keep the latest values
-      Object.assign(card.dataset, { name, mins, secs, type });
-
-      // Handle edit — always read fresh values from dataset
-      card.querySelector('[title="Edit"]').addEventListener("click", () => {
-        poseNameInput.value = card.dataset.name;
-        poseMinsInput.value = card.dataset.mins;
-        poseSecsInput.value = card.dataset.secs;
-        poseTypeInput.value = card.dataset.type;
-        
-        editingPoseCard = card;
-        posePopupTitle.textContent = "Edit Pose";
-        fadeOutPopup(sequencePopup);
-        fadeInPopup(posePopup);
-      });
-
-      // Handle delete with confirmation
-      card.querySelector('[title="Delete"]').addEventListener("click", () => {
-        if (confirm("Are you sure you want to delete this pose?")) {
-          card.remove();
-        }
-      });
-
-      // ✅ Append to the list
-      sequenceList.appendChild(card);
+      // Add new pose
+      poses.push({ name, mins, secs, type });
     }
 
+    renderPoses();
     resetPoseForm();
   });
-
-  // Validate pose form before saving
-  function validatePoseForm() {
-    const name = poseNameInput.value.trim();
-    const totalSeconds = parseInt(poseMinsInput.value) * 60 + parseInt(poseSecsInput.value);
-
-    if (!name) {
-      alert("Pose name cannot be empty.");
-      return false;
-    }
-
-    if (totalSeconds <= 0) {
-      alert("Duration must be greater than 00:00.");
-      return false;
-    }
-
-    if (totalSeconds > 3599) {
-      alert("Duration cannot exceed 59:59.");
-      return false;
-    }
-
-    return true;
-  }
 }
+
+// ==== Initial render ====
+renderPoses();
