@@ -38,6 +38,12 @@ let radius = progressCircle.r.baseVal.value;
 let circumference = 2 * Math.PI * radius;
 progressCircle.style.strokeDasharray = `${circumference}`;
 
+// ==== Sequence Playback State ====
+let activeSequence = null;
+let currentPoseIndex = 0;
+let sequenceSeconds = 0;
+let sequenceTimerInterval = null;
+
 function getPrepareSeconds() {
   return parseInt(prepareMins.value) * 60 + parseInt(prepareSecs.value);
 }
@@ -316,6 +322,70 @@ function tickTimer() {
   updateDisplayImmediate();
 }
 
+// ==== Sequence Playback Logic ====
+function startSequencePlayback() {
+  if (!activeSequence || activeSequence.poses.length === 0) return;
+
+  fadeInPopup(timerPopup);
+  fadeOutPopup(successPopup);
+
+  loadCurrentPose();
+  sequenceTimerInterval = setInterval(tickSequenceTimer, 1000);
+}
+
+function loadCurrentPose() {
+  const pose = activeSequence.poses[currentPoseIndex];
+  sequenceSeconds = parseInt(pose.mins) * 60 + parseInt(pose.secs);
+
+  phaseLabel.textContent = `${pose.type.toUpperCase()} • ${pose.name}`;
+  updateSequenceDisplayImmediate();
+}
+
+function tickSequenceTimer() {
+  if (sequenceSeconds > 0) {
+    sequenceSeconds--;
+    updateSequenceDisplay();
+    return;
+  }
+  currentPoseIndex++;
+  if (currentPoseIndex >= activeSequence.poses.length) {
+    clearInterval(sequenceTimerInterval);
+    activeSequence = null;
+    fadeOutPopup(timerPopup);
+    fadeInPopup(successPopup);
+  } else {
+    loadCurrentPose();
+  }
+}
+
+function updateSequenceDisplayImmediate() {
+  progressCircle.style.transition = "none";
+  updateSequenceDisplay();
+  requestAnimationFrame(() => (progressCircle.style.transition = "stroke-dashoffset 1s linear"));
+}
+
+function updateSequenceDisplay() {
+  const pose = activeSequence.poses[currentPoseIndex];
+  const totalSeconds = parseInt(pose.mins) * 60 + parseInt(pose.secs);
+  const elapsed = totalSeconds - sequenceSeconds;
+
+  const pad = (n) => n.toString().padStart(2, "0");
+  const format = (s) => `${pad(Math.floor(s / 60))}:${pad(s % 60)}`;
+
+  countdownTimer.textContent = format(sequenceSeconds);
+
+  // Remaining time = current pose time left + all later poses
+  const remaining = sequenceSeconds + activeSequence.poses
+    .slice(currentPoseIndex + 1)
+    .reduce((acc, p) => acc + parseInt(p.mins) * 60 + parseInt(p.secs), 0);
+
+  totalTimeRemaining.textContent = format(remaining);
+
+  const percent = elapsed / totalSeconds;
+  progressCircle.style.strokeDashoffset = percent * circumference;
+}
+
+// ==== Popup Button Logic ====
 closePopupBtn.addEventListener("click", () => { 
   clearInterval(timerInterval); 
   isRunning = false; 
@@ -325,26 +395,52 @@ closePopupBtn.addEventListener("click", () => {
 });
 
 pauseResumeBtn.addEventListener("click", () => { 
-  if (isRunning) { 
-    clearInterval(timerInterval); 
-    isRunning = false; 
-    pauseResumeBtn.innerHTML = `<i class="fas fa-play"></i> Resume`; 
-  } else { 
-    isRunning = true; 
-    pauseResumeBtn.innerHTML = `<i class="fas fa-pause"></i> Pause`; 
-    timerInterval = setInterval(tickTimer, 1000); 
-  } 
+  if (activeSequence) {
+    if (sequenceTimerInterval) {
+      clearInterval(sequenceTimerInterval);
+      sequenceTimerInterval = null;
+      isRunning = false; 
+      pauseResumeBtn.innerHTML = `<i class="fas fa-play"></i> Resume`;
+    } else {
+      isRunning = true; 
+      sequenceTimerInterval = setInterval(tickSequenceTimer, 1000);
+      pauseResumeBtn.innerHTML = `<i class="fas fa-pause"></i> Pause`;
+    }
+  } else {
+    if (isRunning) { 
+      clearInterval(timerInterval); 
+      isRunning = false; 
+      pauseResumeBtn.innerHTML = `<i class="fas fa-play"></i> Resume`; 
+    } else { 
+      isRunning = true; 
+      pauseResumeBtn.innerHTML = `<i class="fas fa-pause"></i> Pause`; 
+      timerInterval = setInterval(tickTimer, 1000); 
+    } 
+  }
 });
 
 skipBtn.addEventListener("click", () => { 
-  tickTimer(); 
+  if (activeSequence) {
+    sequenceSeconds = 0;
+    tickSequenceTimer();
+  } else {
+    tickTimer();
+  }
 });
 
 closeBtn.addEventListener("click", () => { 
+    if (activeSequence) {
+    clearInterval(sequenceTimerInterval);
+    activeSequence = null;
+  } else {
+    clearInterval(timerInterval);
+    resetTimer();
+  }
+  isRunning = false;
   fadeOutPopup(timerPopup); 
   fadeOutPopup(successPopup); 
-  resetTimer(); 
 });
+
 restartBtn.addEventListener("click", () => { 
   fadeInPopup(timerPopup); 
   fadeOutPopup(successPopup); 
@@ -463,6 +559,12 @@ function renderSequences() {
         renderSequences();
       }
     });
+    card.querySelector('[title="Play"]').addEventListener("click", () => {
+      activeSequence = seq;
+      currentPoseIndex = 0;
+      startSequencePlayback();
+    });
+
     sequencesTabList.appendChild(card);
   });
 }
